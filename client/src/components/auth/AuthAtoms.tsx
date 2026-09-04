@@ -62,17 +62,11 @@ export const FormField: React.FC<FormFieldProps> = ({ label, error, children }) 
     <label className="text-xs font-medium text-foreground-muted">{label}</label>
     {children}
     {error && (
-      <motion_p className="text-xs text-danger flex items-center gap-1" role="alert">
+      <p className="text-xs text-danger flex items-center gap-1" role="alert">
         {error}
-      </motion_p>
+      </p>
     )}
   </div>
-)
-
-// shake animation helper (inline component)
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const motion_p: React.FC<any> = ({ className, children, role }) => (
-  <p className={className} role={role}>{children}</p>
 )
 
 // ── PasswordStrength ─────────────────────────────────────────────

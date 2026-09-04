@@ -8,14 +8,13 @@ import {
   GitCommit,
   GitPullRequest,
   CheckCircle2,
-  Sparkles,
   UserPlus,
   PlayCircle,
   FileCode,
 } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 
-import { COLLABORATORS, ACTIVITIES, type ActivityItem } from '@/lib/mockData'
+import { COLLABORATORS, ACTIVITIES } from '@/lib/mockData'
 import { cn } from '@/lib/utils'
 
 interface ActivitySidebarProps {
@@ -144,8 +143,9 @@ export const ActivitySidebar: React.FC<ActivitySidebarProps> = ({ className }) =
                   <span className="font-mono text-[11px] text-accent bg-accent/10 px-1.5 py-0.5 rounded border border-accent/20 break-all">
                     {act.target}
                   </span>
-                  <div className="text-[10px] text-foreground-subtle mt-0.5">
-                    {formatDistanceToNow(new Date(act.timestamp), { addSuffix: true })}
+                  <div className="flex items-center gap-1.5 text-[10px] text-foreground-subtle mt-0.5">
+                    <Icon size={11} className="text-foreground-muted" />
+                    <span>{formatDistanceToNow(new Date(act.timestamp), { addSuffix: true })}</span>
                   </div>
                 </div>
               </motion.div>

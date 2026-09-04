@@ -1,15 +1,13 @@
-import React, { useState, useMemo } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useMemo } from 'react'
+import { motion } from 'framer-motion'
 import {
   Plus,
   Search,
   LayoutGrid,
   List,
-  SlidersHorizontal,
   ChevronDown,
   FolderPlus,
   SearchX,
-  Sparkles,
   Layers,
   Star,
   Users,
@@ -156,7 +154,7 @@ export default function Dashboard() {
 
           <div className="flex items-center gap-2">
             <Button
-              variant="outline"
+              variant="secondary"
               size="icon"
               className="xl:hidden"
               onClick={() => setShowSidebar(s => !s)}
@@ -299,7 +297,7 @@ export default function Dashboard() {
               {/* Sort Dropdown */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" className="h-9 gap-2 text-xs">
+                  <Button variant="secondary" size="sm" className="h-9 gap-2 text-xs">
                     <ArrowUpDown size={13} className="text-foreground-subtle" />
                     <span>Sort: {sortLabels[sortOption]}</span>
                     <ChevronDown size={12} className="text-foreground-subtle" />

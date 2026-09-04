@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { User, Users } from 'lucide-react'
-import { useOnboardingStore, WorkspaceType } from '@/store/useOnboardingStore'
+import { useOnboardingStore, type WorkspaceType } from '@/store/useOnboardingStore'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 

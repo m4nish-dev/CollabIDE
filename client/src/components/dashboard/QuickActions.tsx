@@ -1,6 +1,7 @@
 import React from 'react'
 import { motion } from 'framer-motion'
-import { Plus, Github, LayoutTemplate, UserPlus, ArrowUpRight } from 'lucide-react'
+import { Plus, LayoutTemplate, UserPlus, ArrowUpRight } from 'lucide-react'
+import { GitHubIcon } from '@/components/auth/AuthAtoms'
 import { cn } from '@/lib/utils'
 
 interface QuickActionsProps {
@@ -31,7 +32,7 @@ export const QuickActions: React.FC<QuickActionsProps> = ({
       id: 'import-github',
       title: 'Import from GitHub',
       desc: 'Clone a public or private repository with one click',
-      icon: Github,
+      icon: GitHubIcon,
       color: '#22D3EE',
       bg: 'rgba(34, 211, 238, 0.12)',
       borderHover: 'hover:border-[#22D3EE]/60 hover:shadow-[0_0_24px_rgba(34,211,238,0.18)]',

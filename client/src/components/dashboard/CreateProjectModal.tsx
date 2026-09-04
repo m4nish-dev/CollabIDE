@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Sparkles, Code2, Globe, Lock, Check } from 'lucide-react'
+import { Sparkles, Globe, Lock, Check } from 'lucide-react'
 
 import {
   Dialog,

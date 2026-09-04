@@ -1,6 +1,6 @@
 import React from 'react'
 import { Code2, Layers, Rocket } from 'lucide-react'
-import { useOnboardingStore, ExperienceLevel } from '@/store/useOnboardingStore'
+import { useOnboardingStore, type ExperienceLevel } from '@/store/useOnboardingStore'
 import { cn } from '@/lib/utils'
 
 const LANGUAGES = ['JavaScript', 'TypeScript', 'Python', 'Go', 'Rust', 'Java', 'C++', 'Ruby', 'PHP', 'Swift']

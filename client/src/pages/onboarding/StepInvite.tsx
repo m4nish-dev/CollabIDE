@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { X, Link2, Check, ChevronDown } from 'lucide-react'
-import { useOnboardingStore, InviteEntry } from '@/store/useOnboardingStore'
-import { Input } from '@/components/ui/input'
+import { useOnboardingStore, type InviteEntry } from '@/store/useOnboardingStore'
 import { cn } from '@/lib/utils'
 
 const INVITE_LINK = 'https://collabide.dev/invite/abc123xyz'
