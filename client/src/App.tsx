@@ -9,6 +9,7 @@ import Signup from '@/pages/auth/Signup'
 import ForgotPassword from '@/pages/auth/ForgotPassword'
 import ResetPassword from '@/pages/auth/ResetPassword'
 import VerifyEmail from '@/pages/auth/VerifyEmail'
+import Onboarding from '@/pages/onboarding/Onboarding'
 
 // ── Placeholder authenticated pages ──────────────────────────
 const Placeholder = ({ title }: { title: string }) => (
@@ -27,7 +28,6 @@ const DashboardPage  = () => <Placeholder title="Dashboard" />
 const WorkspacePage  = () => <Placeholder title="Workspace" />
 const ProjectPage    = () => <Placeholder title="Project" />
 const SettingsPage   = () => <Placeholder title="Settings" />
-const OnboardingPage = () => <Placeholder title="Onboarding" />
 const NotFoundPage   = () => <Placeholder title="404 – Page Not Found" />
 
 function App() {
@@ -41,7 +41,7 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password"  element={<ResetPassword />} />
           <Route path="/verify-email"    element={<VerifyEmail />} />
-          <Route path="/onboarding"      element={<OnboardingPage />} />
+          <Route path="/onboarding"      element={<Onboarding />} />
           <Route path="/404"             element={<NotFoundPage />} />
 
           {/* Authenticated routes — wrapped in AppShell */}
