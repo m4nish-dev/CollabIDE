@@ -3,7 +3,14 @@ import { Toaster } from '@/components/ui/toast'
 import { ThemeProvider } from '@/components/layout/ThemeProvider'
 import { AppShell } from '@/components/layout/AppShell'
 
-// ── Placeholder route components ──────────────────────────────
+// ── Auth pages ────────────────────────────────────────────────
+import Login from '@/pages/auth/Login'
+import Signup from '@/pages/auth/Signup'
+import ForgotPassword from '@/pages/auth/ForgotPassword'
+import ResetPassword from '@/pages/auth/ResetPassword'
+import VerifyEmail from '@/pages/auth/VerifyEmail'
+
+// ── Placeholder authenticated pages ──────────────────────────
 const Placeholder = ({ title }: { title: string }) => (
   <div className="flex items-center justify-center min-h-full">
     <div className="text-center">
@@ -16,28 +23,26 @@ const Placeholder = ({ title }: { title: string }) => (
   </div>
 )
 
-// Auth pages (no shell)
-const LoginPage     = () => <Placeholder title="Login" />
-const SignupPage    = () => <Placeholder title="Sign Up" />
-const OnboardingPage = () => <Placeholder title="Onboarding" />
-const NotFoundPage  = () => <Placeholder title="404 – Page Not Found" />
-
-// Authenticated pages (inside AppShell via <Outlet>)
 const DashboardPage  = () => <Placeholder title="Dashboard" />
 const WorkspacePage  = () => <Placeholder title="Workspace" />
 const ProjectPage    = () => <Placeholder title="Project" />
 const SettingsPage   = () => <Placeholder title="Settings" />
+const OnboardingPage = () => <Placeholder title="Onboarding" />
+const NotFoundPage   = () => <Placeholder title="404 – Page Not Found" />
 
 function App() {
   return (
     <ThemeProvider defaultTheme="dark">
       <BrowserRouter>
         <Routes>
-          {/* Public routes */}
-          <Route path="/login"      element={<LoginPage />} />
-          <Route path="/signup"     element={<SignupPage />} />
-          <Route path="/onboarding" element={<OnboardingPage />} />
-          <Route path="/404"        element={<NotFoundPage />} />
+          {/* Public / auth routes */}
+          <Route path="/login"           element={<Login />} />
+          <Route path="/signup"          element={<Signup />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password"  element={<ResetPassword />} />
+          <Route path="/verify-email"    element={<VerifyEmail />} />
+          <Route path="/onboarding"      element={<OnboardingPage />} />
+          <Route path="/404"             element={<NotFoundPage />} />
 
           {/* Authenticated routes — wrapped in AppShell */}
           <Route element={<AppShell />}>
@@ -48,7 +53,7 @@ function App() {
           </Route>
 
           {/* Redirects */}
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="*" element={<Navigate to="/404" replace />} />
         </Routes>
       </BrowserRouter>
