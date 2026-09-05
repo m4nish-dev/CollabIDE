@@ -39,11 +39,16 @@ import { cn } from '@/lib/utils'
 type TabType = 'all' | 'starred' | 'shared' | 'archived'
 type SortType = 'modified' | 'name' | 'created'
 
-export default function Dashboard() {
+interface DashboardProps {
+  defaultTab?: TabType
+}
+
+export default function Dashboard({ defaultTab = 'all' }: DashboardProps) {
   const navigate = useNavigate()
   const [projectsList] = useState<Project[]>(PROJECTS)
   const [searchQuery, setSearchQuery] = useState('')
-  const [activeTab, setActiveTab] = useState<TabType>('all')
+  const [selectedTab, setSelectedTab] = useState<TabType | null>(null)
+  const activeTab = selectedTab ?? defaultTab
   const [selectedLanguage, setSelectedLanguage] = useState<string>('All')
   const [sortOption, setSortOption] = useState<SortType>('modified')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
@@ -114,7 +119,7 @@ export default function Dashboard() {
   const handleClearFilters = () => {
     setSearchQuery('')
     setSelectedLanguage('All')
-    setActiveTab('all')
+    setSelectedTab('all')
   }
 
 
@@ -205,7 +210,7 @@ export default function Dashboard() {
                 return (
                   <button
                     key={tab.id}
-                    onClick={() => setActiveTab(tab.id as TabType)}
+                    onClick={() => setSelectedTab(tab.id as TabType)}
                     className={cn(
                       'relative flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap',
                       isActive

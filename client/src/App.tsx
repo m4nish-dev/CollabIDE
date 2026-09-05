@@ -47,7 +47,11 @@ function App() {
 
           {/* Authenticated routes — wrapped in AppShell */}
           <Route element={<AppShell />}>
-            <Route path="/dashboard"      element={<Dashboard />} />
+            <Route path="/dashboard"      element={<Dashboard defaultTab="all" />} />
+            <Route path="/projects"       element={<Dashboard defaultTab="all" />} />
+            <Route path="/shared"         element={<Dashboard defaultTab="shared" />} />
+            <Route path="/starred"        element={<Dashboard defaultTab="starred" />} />
+            <Route path="/activity"       element={<Dashboard defaultTab="all" />} />
             <Route path="/templates"      element={<Templates />} />
             <Route path="/workspace/:id"  element={<WorkspacePage />} />
             <Route path="/project/:id"    element={<ProjectPage />} />

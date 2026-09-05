@@ -16,8 +16,7 @@ export const StepProfile: React.FC = () => {
 
   // Debounced username check
   useEffect(() => {
-    if (!username) { setUsernameState('idle'); return }
-    setUsernameState('checking')
+    if (!username) return
     const id = setTimeout(() => {
       setUsernameState(RESERVED.includes(username.toLowerCase()) ? 'taken' : 'available')
     }, 600)
@@ -91,7 +90,11 @@ export const StepProfile: React.FC = () => {
         <div className="relative">
           <Input
             value={username}
-            onChange={e => setProfile({ username: e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '') })}
+            onChange={e => {
+              const val = e.target.value.toLowerCase().replace(/[^a-z0-9_-]/g, '')
+              setUsernameState(val ? 'checking' : 'idle')
+              setProfile({ username: val })
+            }}
             placeholder="rohit_chugh"
             className={cn(
               'pr-9',

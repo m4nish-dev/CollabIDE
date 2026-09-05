@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
@@ -58,8 +58,7 @@ const WORKSPACES = [
   { id: 'ws-personal', name: 'Personal Sandboxes', tier: 'Free' },
 ]
 
-export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
-  open,
+const CreateProjectModalContent: React.FC<Omit<CreateProjectModalProps, 'open'>> = ({
   onOpenChange,
   initialTemplate = null,
   initialSource = 'blank',
@@ -67,16 +66,16 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
 }) => {
   const navigate = useNavigate()
 
-  // Stepper state
-  const [step, setStep] = useState<1 | 2>(initialStep)
-  const [source, setSource] = useState<SourceType>(initialSource)
+  // Stepper state - directly initialized from props
+  const [step, setStep] = useState<1 | 2>(initialTemplate ? 2 : initialStep)
+  const [source, setSource] = useState<SourceType>(initialTemplate ? 'template' : initialSource)
 
   // Form fields
-  const [projectName, setProjectName] = useState('')
+  const [projectName, setProjectName] = useState(initialTemplate ? initialTemplate.slug : '')
   const [description, setDescription] = useState('')
   const [visibility, setVisibility] = useState<VisibilityType>('private')
   const [selectedWorkspace, setSelectedWorkspace] = useState(WORKSPACES[0].name)
-  const [selectedTemplateId, setSelectedTemplateId] = useState('react-vite')
+  const [selectedTemplateId, setSelectedTemplateId] = useState(initialTemplate ? initialTemplate.id : 'react-vite')
 
   // GitHub specific
   const [githubUrl, setGithubUrl] = useState('')
@@ -84,24 +83,6 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
 
   // UI state
   const [loading, setLoading] = useState(false)
-
-  // Sync initial props when modal opens
-  useEffect(() => {
-    if (open) {
-      if (initialTemplate) {
-        setSource('template')
-        setStep(2)
-        setSelectedTemplateId(initialTemplate.id)
-        setProjectName(initialTemplate.slug)
-      } else {
-        setSource(initialSource)
-        setStep(initialStep)
-        if (!projectName) {
-          setProjectName('')
-        }
-      }
-    }
-  }, [open, initialTemplate, initialSource, initialStep])
 
   // Slug generator
   const slug = useMemo(() => {
@@ -151,8 +132,7 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[640px] p-0 overflow-hidden border border-border bg-background-elevated/95 backdrop-blur-xl shadow-2xl">
+    <DialogContent className="sm:max-w-[640px] p-0 overflow-hidden border border-border bg-background-elevated/95 backdrop-blur-xl shadow-2xl">
         {/* Stepper Header Bar */}
         <div className="border-b border-border/80 px-6 pt-5 pb-4 bg-background-elevated/50">
           <div className="flex items-center justify-between">
@@ -595,6 +575,26 @@ export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
           </div>
         </div>
       </DialogContent>
+  )
+}
+
+export const CreateProjectModal: React.FC<CreateProjectModalProps> = ({
+  open,
+  onOpenChange,
+  initialTemplate,
+  initialSource,
+  initialStep,
+}) => {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      {open && (
+        <CreateProjectModalContent
+          onOpenChange={onOpenChange}
+          initialTemplate={initialTemplate}
+          initialSource={initialSource}
+          initialStep={initialStep}
+        />
+      )}
     </Dialog>
   )
 }

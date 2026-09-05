@@ -1,18 +1,5 @@
-import React, { createContext, useContext, useState } from 'react'
-
-type Theme = 'dark' | 'light'
-
-interface ThemeContextValue {
-  theme: Theme
-  setTheme: (theme: Theme) => void
-}
-
-const ThemeContext = createContext<ThemeContextValue>({
-  theme: 'dark',
-  setTheme: () => null,
-})
-
-export const useTheme = () => useContext(ThemeContext)
+import React, { useState } from 'react'
+import { ThemeContext, type Theme } from './ThemeContext'
 
 interface ThemeProviderProps {
   children: React.ReactNode
@@ -33,3 +20,6 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     </ThemeContext.Provider>
   )
 }
+
+export { useTheme } from './ThemeContext'
+export type { Theme } from './ThemeContext'

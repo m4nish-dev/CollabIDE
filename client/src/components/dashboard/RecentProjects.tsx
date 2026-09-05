@@ -5,7 +5,7 @@ import { Clock, ArrowRight, ExternalLink } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 
 import { type Project } from '@/lib/mockData'
-import { LANG_CONFIG } from '@/components/dashboard/ProjectCard'
+import { LANG_CONFIG } from '@/lib/langConfig'
 import { Button } from '@/components/ui/button'
 
 interface RecentProjectsProps {

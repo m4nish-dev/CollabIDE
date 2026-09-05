@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { NavLink, useLocation, Outlet } from 'react-router-dom'
+import { NavLink, useLocation, useNavigate, Outlet } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   LayoutDashboard,
@@ -116,6 +116,7 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
+  const navigate = useNavigate()
   return (
     <motion.aside
       animate={{ width: collapsed ? 64 : 240 }}
@@ -221,7 +222,10 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, onToggle }) => {
               <Settings size={14} /> Settings
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="gap-2 cursor-pointer text-danger focus:text-danger focus:bg-danger/10">
+            <DropdownMenuItem
+              className="gap-2 cursor-pointer text-danger focus:text-danger focus:bg-danger/10"
+              onClick={() => navigate('/login')}
+            >
               <LogOut size={14} /> Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -250,6 +254,7 @@ interface TopbarProps {
 }
 
 const Topbar: React.FC<TopbarProps> = ({ breadcrumbs = [] }) => {
+  const navigate = useNavigate()
   return (
     <header className="h-14 flex items-center justify-between px-4 border-b border-border bg-background-elevated/60 backdrop-blur-sm shrink-0">
       {/* Left: breadcrumbs */}
@@ -330,7 +335,10 @@ const Topbar: React.FC<TopbarProps> = ({ breadcrumbs = [] }) => {
                 <Settings size={14} /> Settings
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="gap-2 cursor-pointer text-danger focus:text-danger focus:bg-danger/10">
+              <DropdownMenuItem
+                className="gap-2 cursor-pointer text-danger focus:text-danger focus:bg-danger/10"
+                onClick={() => navigate('/login')}
+              >
                 <LogOut size={14} /> Log out
               </DropdownMenuItem>
             </DropdownMenuContent>
