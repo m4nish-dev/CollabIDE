@@ -17,13 +17,15 @@ import {
   PanelRightOpen,
 } from 'lucide-react'
 
-import { PROJECTS, COLLABORATORS, type Project, type Language } from '@/lib/mockData'
+import { useNavigate } from 'react-router-dom'
+
+import { PROJECTS, type Project } from '@/lib/mockData'
 import { ProjectCard } from '@/components/dashboard/ProjectCard'
 import { QuickActions } from '@/components/dashboard/QuickActions'
 import { StatsStrip } from '@/components/dashboard/StatsStrip'
 import { RecentProjects } from '@/components/dashboard/RecentProjects'
 import { ActivitySidebar } from '@/components/dashboard/ActivitySidebar'
-import { CreateProjectModal } from '@/components/dashboard/CreateProjectModal'
+import { CreateProjectModal, type SourceType } from '@/components/features/projects/CreateProjectModal'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -38,13 +40,15 @@ type TabType = 'all' | 'starred' | 'shared' | 'archived'
 type SortType = 'modified' | 'name' | 'created'
 
 export default function Dashboard() {
-  const [projectsList, setProjectsList] = useState<Project[]>(PROJECTS)
+  const navigate = useNavigate()
+  const [projectsList] = useState<Project[]>(PROJECTS)
   const [searchQuery, setSearchQuery] = useState('')
   const [activeTab, setActiveTab] = useState<TabType>('all')
   const [selectedLanguage, setSelectedLanguage] = useState<string>('All')
   const [sortOption, setSortOption] = useState<SortType>('modified')
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [modalOpen, setModalOpen] = useState(false)
+  const [modalSource, setModalSource] = useState<SourceType>('blank')
   const [showSidebar, setShowSidebar] = useState(true)
 
   // Dynamic greeting based on time of day
@@ -113,23 +117,6 @@ export default function Dashboard() {
     setActiveTab('all')
   }
 
-  // Handle new project addition
-  const handleCreateProject = (newProj: { name: string; description: string; language: Language }) => {
-    const created: Project = {
-      id: `p-${Date.now()}`,
-      name: newProj.name,
-      description: newProj.description,
-      language: newProj.language,
-      collaborators: [COLLABORATORS[0]],
-      updatedAt: new Date().toISOString(),
-      createdAt: new Date().toISOString(),
-      starred: false,
-      archived: false,
-      runs: 0,
-      shared: false,
-    }
-    setProjectsList(prev => [created, ...prev])
-  }
 
   const sortLabels: Record<SortType, string> = {
     modified: 'Last modified',
@@ -166,7 +153,10 @@ export default function Dashboard() {
             <Button
               variant="primary"
               className="gap-2 shadow-[0_0_20px_rgba(124,92,255,0.3)]"
-              onClick={() => setModalOpen(true)}
+              onClick={() => {
+                setModalSource('blank')
+                setModalOpen(true)
+              }}
             >
               <Plus size={16} />
               New Project
@@ -176,9 +166,15 @@ export default function Dashboard() {
 
         {/* 2. Quick Actions Row */}
         <QuickActions
-          onNewProject={() => setModalOpen(true)}
-          onImportGithub={() => setModalOpen(true)}
-          onBrowseTemplates={() => setModalOpen(true)}
+          onNewProject={() => {
+            setModalSource('blank')
+            setModalOpen(true)
+          }}
+          onImportGithub={() => {
+            setModalSource('github')
+            setModalOpen(true)
+          }}
+          onBrowseTemplates={() => navigate('/templates')}
           onInviteTeammates={() => alert('Invite Teammates dialog')}
         />
 
@@ -418,7 +414,7 @@ export default function Dashboard() {
       <CreateProjectModal
         open={modalOpen}
         onOpenChange={setModalOpen}
-        onCreate={handleCreateProject}
+        initialSource={modalSource}
       />
     </div>
   )

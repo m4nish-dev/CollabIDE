@@ -11,6 +11,7 @@ import ResetPassword from '@/pages/auth/ResetPassword'
 import VerifyEmail from '@/pages/auth/VerifyEmail'
 import Onboarding from '@/pages/onboarding/Onboarding'
 import Dashboard from '@/pages/Dashboard'
+import Templates from '@/pages/Templates'
 
 // ── Placeholder authenticated pages ──────────────────────────
 const Placeholder = ({ title }: { title: string }) => (
@@ -47,6 +48,7 @@ function App() {
           {/* Authenticated routes — wrapped in AppShell */}
           <Route element={<AppShell />}>
             <Route path="/dashboard"      element={<Dashboard />} />
+            <Route path="/templates"      element={<Templates />} />
             <Route path="/workspace/:id"  element={<WorkspacePage />} />
             <Route path="/project/:id"    element={<ProjectPage />} />
             <Route path="/settings"       element={<SettingsPage />} />
