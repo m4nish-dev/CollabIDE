@@ -13,6 +13,8 @@ import Onboarding from '@/pages/onboarding/Onboarding'
 import Dashboard from '@/pages/Dashboard'
 import Templates from '@/pages/Templates'
 
+import IDEWorkspace from '@/pages/IDEWorkspace'
+
 // ── Placeholder authenticated pages ──────────────────────────
 const Placeholder = ({ title }: { title: string }) => (
   <div className="flex items-center justify-center min-h-full">
@@ -27,7 +29,6 @@ const Placeholder = ({ title }: { title: string }) => (
 )
 
 const WorkspacePage  = () => <Placeholder title="Workspace" />
-const ProjectPage    = () => <Placeholder title="Project" />
 const SettingsPage   = () => <Placeholder title="Settings" />
 const NotFoundPage   = () => <Placeholder title="404 – Page Not Found" />
 
@@ -45,6 +46,9 @@ function App() {
           <Route path="/onboarding"      element={<Onboarding />} />
           <Route path="/404"             element={<NotFoundPage />} />
 
+          {/* Full-viewport Core IDE workspace (replaces AppShell) */}
+          <Route path="/project/:id"     element={<IDEWorkspace />} />
+
           {/* Authenticated routes — wrapped in AppShell */}
           <Route element={<AppShell />}>
             <Route path="/dashboard"      element={<Dashboard defaultTab="all" />} />
@@ -54,7 +58,6 @@ function App() {
             <Route path="/activity"       element={<Dashboard defaultTab="all" />} />
             <Route path="/templates"      element={<Templates />} />
             <Route path="/workspace/:id"  element={<WorkspacePage />} />
-            <Route path="/project/:id"    element={<ProjectPage />} />
             <Route path="/settings"       element={<SettingsPage />} />
           </Route>
 
