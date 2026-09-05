@@ -30,19 +30,19 @@ export const FindInFiles = () => {
   const [includes, setIncludes] = useState("");
   const [excludes, setExcludes] = useState("");
 
-  const [expandedFiles, setExpandedFiles] = useState(new Set(["src/components/Header.tsx"]));
+  const [expandedFiles, setExpandedFiles] = useState(new Set(["src/components/Header.jsx"]));
 
   // Mock results for demonstration since we don't have a backend indexer yet
   const mockResults = [
     {
-      file: "src/components/Header.tsx",
+      file: "src/components/Header.jsx",
       matches: [
         { line: 24, content: "  unreadAlertsCount = 3," },
         { line: 63, content: "  {unreadAlertsCount > 0 && (" }
       ]
     },
     {
-      file: "src/App.tsx",
+      file: "src/App.jsx",
       matches: [
         { line: 12, content: "  <Header workspaceName=\"CollabIDE Demo\" unreadAlertsCount={2} />" }
       ]
@@ -214,7 +214,7 @@ export const FindInFiles = () => {
                 type="text" 
                 value={includes}
                 onChange={(e) => setIncludes(e.target.value)}
-                placeholder="files to include (e.g. *.ts)" 
+                placeholder="files to include (e.g. *.js)" 
                 className="w-full bg-background border border-border text-xs rounded-sm px-2 py-1 text-foreground placeholder:text-foreground-subtle focus:outline-none focus:border-accent"
               />
               <input 

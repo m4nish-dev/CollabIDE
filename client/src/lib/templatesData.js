@@ -4,9 +4,9 @@ export const TEMPLATES_DATA = [
     name: "React + Vite",
     slug: "react-vite-starter",
     description:
-      "Blazing-fast frontend starter featuring React 19, TypeScript, Vite HMR, and Tailwind CSS.",
+      "Blazing-fast frontend starter featuring React 19, JavaScript, Vite HMR, and Tailwind CSS.",
     category: "Frontend",
-    tags: ["React", "TypeScript", "Tailwind", "Vite"],
+    tags: ["React", "JavaScript", "Tailwind", "Vite"],
     stars: "18.2k",
     usedBy: "34.8k developers",
     gradient: "from-cyan-500/20 via-blue-600/20 to-indigo-600/30",
@@ -20,7 +20,7 @@ export const TEMPLATES_DATA = [
     description:
       "Fullstack production template with App Router, Server Components, API routes, and Lucide icons.",
     category: "Fullstack",
-    tags: ["Next.js", "React", "TypeScript", "Tailwind"],
+    tags: ["Next.js", "React", "JavaScript", "Tailwind"],
     stars: "24.5k",
     usedBy: "52.1k developers",
     gradient: "from-zinc-400/20 via-neutral-700/30 to-black/50",
@@ -32,9 +32,9 @@ export const TEMPLATES_DATA = [
     name: "Node.js API",
     slug: "nodejs-rest-api",
     description:
-      "Clean REST API boilerplate with TypeScript, native Node HTTP, Zod validation, and Jest testing.",
+      "Clean REST API boilerplate with JavaScript, native Node HTTP, Zod validation, and Jest testing.",
     category: "Backend",
-    tags: ["Node.js", "TypeScript", "Zod", "Jest"],
+    tags: ["Node.js", "JavaScript", "Zod", "Jest"],
     stars: "9.4k",
     usedBy: "18.9k developers",
     gradient: "from-emerald-500/20 via-green-600/20 to-teal-800/30",
@@ -104,7 +104,7 @@ export const TEMPLATES_DATA = [
     description:
       "Modern Vue 3 application with Vite, Composition API, Pinia state store, and Vue Router 4.",
     category: "Frontend",
-    tags: ["Vue 3", "TypeScript", "Pinia", "Vite"],
+    tags: ["Vue 3", "JavaScript", "Pinia", "Vite"],
     stars: "13.9k",
     usedBy: "21.5k developers",
     gradient: "from-emerald-400/20 via-teal-600/20 to-green-900/30",
@@ -118,7 +118,7 @@ export const TEMPLATES_DATA = [
     description:
       "High performance fullstack web apps with Svelte 5 runes, SSR, file-based routing, and adapter-node.",
     category: "Fullstack",
-    tags: ["SvelteKit", "Svelte", "TypeScript", "Vite"],
+    tags: ["SvelteKit", "Svelte", "JavaScript", "Vite"],
     stars: "10.3k",
     usedBy: "15.8k developers",
     gradient: "from-orange-600/20 via-red-600/20 to-rose-900/30",

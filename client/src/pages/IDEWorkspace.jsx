@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Group, Panel, Separator } from "react-resizable-panels";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useProjectStore } from "@/store/useProjectStore";
+import { useSimulatedPresence } from "@/hooks/useSimulatedPresence";
+import { JoinNotification } from "@/components/features/collaboration/JoinNotification";
 import { IDETopBar } from "@/components/ide/IDETopBar";
 import { ActivityBar } from "@/components/ide/ActivityBar";
 import { FileExplorer } from "@/components/ide/FileExplorer";
@@ -225,7 +227,8 @@ export default function IDEWorkspace() {
       {/* Status Bar (22px) */}
       <StatusBar />
 
-      {/* Modals */}
+      {/* Modals & Notifications */}
+      <JoinNotification />
       <CommandPalette />
       <QuickOpen />
       <GlobalSearch />

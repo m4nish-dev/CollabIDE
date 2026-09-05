@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { DndContext, useDraggable, useDroppable } from "@dnd-kit/core";
 import { useProjectStore } from "@/store/useProjectStore";
+import { PresenceIndicator } from "@/components/features/collaboration/PresenceIndicator";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -454,7 +455,7 @@ export const FileExplorer = () => {
                   <FileCode className="h-3.5 w-3.5 text-accent shrink-0" />
                   <input
                     autoFocus
-                    placeholder="filename.tsx"
+                    placeholder="filename.jsx"
                     value={inlineInputName}
                     onChange={(e) => setInlineInputName(e.target.value)}
                     onBlur={() => handleNewFileSubmit(node.path)}
@@ -606,7 +607,7 @@ export const FileExplorer = () => {
                       <FileCode className="h-3.5 w-3.5 text-accent shrink-0" />
                       <input
                         autoFocus
-                        placeholder="filename.tsx"
+                        placeholder="filename.jsx"
                         value={inlineInputName}
                         onChange={(e) => setInlineInputName(e.target.value)}
                         onBlur={() => handleNewFileSubmit("root-project")}

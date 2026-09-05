@@ -77,7 +77,7 @@ export const PROJECTS = [
     name: "acme-dashboard",
     description:
       "Internal analytics dashboard for Acme Corp — real-time KPIs, charts, and team reporting.",
-    language: "TypeScript",
+    language: "JavaScript",
     collaborators: [rohit, priya, arjun, sneha, dev],
     updatedAt: new Date(Date.now() - 2 * 3600000).toISOString(),
     createdAt: new Date(Date.now() - 30 * 86400000).toISOString(),
@@ -105,7 +105,7 @@ export const PROJECTS = [
     name: "portfolio-v3",
     description:
       "Personal portfolio site — built with Next.js 14, Framer Motion, and a custom CMS.",
-    language: "TypeScript",
+    language: "JavaScript",
     collaborators: [rohit],
     updatedAt: new Date(Date.now() - 1 * 86400000).toISOString(),
     createdAt: new Date(Date.now() - 14 * 86400000).toISOString(),
@@ -133,7 +133,7 @@ export const PROJECTS = [
     name: "design-system",
     description:
       "Component library and design tokens shared across all frontend projects at scale.",
-    language: "TypeScript",
+    language: "JavaScript",
     collaborators: [rohit, priya, sneha, rahul],
     updatedAt: new Date(Date.now() - 12 * 3600000).toISOString(),
     createdAt: new Date(Date.now() - 90 * 86400000).toISOString(),
@@ -203,7 +203,7 @@ export const PROJECTS = [
     name: "auth-service",
     description:
       "Centralised authentication service — JWT, OAuth2, MFA, and session management.",
-    language: "TypeScript",
+    language: "JavaScript",
     collaborators: [rohit, arjun],
     updatedAt: new Date(Date.now() - 18 * 3600000).toISOString(),
     createdAt: new Date(Date.now() - 35 * 86400000).toISOString(),
@@ -248,7 +248,7 @@ export const ACTIVITIES = [
     id: "a1",
     collaborator: priya,
     action: "edited",
-    target: "Header.tsx",
+    target: "Header.jsx",
     timestamp: new Date(Date.now() - 10 * 60000).toISOString(),
   },
   {

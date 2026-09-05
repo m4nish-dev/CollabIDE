@@ -29,6 +29,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { ShareModal } from "./ShareModal";
+import { CollaboratorStack } from "@/components/features/collaboration/CollaboratorStack";
 
 export const IDETopBar = () => {
   const {
@@ -38,7 +39,6 @@ export const IDETopBar = () => {
     branches,
     setCurrentBranch,
     activeFileId,
-    collaborators,
     isRunning,
     toggleRun,
     isShareModalOpen,
@@ -71,9 +71,7 @@ export const IDETopBar = () => {
   // Breadcrumb breakdown
   const breadcrumbSegments = activeFileId
     ? activeFileId.split("/")
-    : ["src", "App.tsx"];
-  const visibleCollaborators = collaborators.slice(0, 5);
-  const extraCount = Math.max(0, collaborators.length - 5);
+    : ["src", "App.jsx"];
 
   return (
     <TooltipProvider delayDuration={150}>
@@ -183,57 +181,7 @@ export const IDETopBar = () => {
 
         {/* Right Cluster */}
         <div className="flex items-center gap-2 shrink-0">
-          {/* Live Collaborator Avatars */}
-          <div className="flex items-center -space-x-1.5 hover:space-x-0.5 transition-all py-0.5">
-            {visibleCollaborators.map((c) => (
-              <Tooltip key={c.id}>
-                <TooltipTrigger asChild>
-                  <div
-                    className="relative cursor-pointer transition-transform hover:scale-110 hover:z-10"
-                    onClick={() => {
-                      setActiveRightTab("collaborators");
-                    }}
-                  >
-                    <img
-                      src={c.avatar}
-                      alt={c.name}
-                      className="h-6 w-6 rounded-full object-cover ring-2 ring-background-elevated"
-                      style={{ outline: `2px solid ${c.color}` }}
-                    />
-
-                    <span
-                      className="absolute -bottom-0.5 -right-0.5 h-1.5 w-1.5 rounded-full border border-background"
-                      style={{
-                        backgroundColor:
-                          c.status === "online" ? "#10B981" : "#F59E0B",
-                      }}
-                    />
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent
-                  side="bottom"
-                  className="text-xs bg-background-overlay border-border p-2"
-                >
-                  <div className="font-semibold text-foreground">{c.name}</div>
-                  <div className="text-[10px] text-foreground-muted">
-                    editing{" "}
-                    <span className="text-accent">
-                      {c.activeFile.split("/").pop()}
-                    </span>
-                  </div>
-                  <div className="text-[10px] text-foreground-subtle">
-                    {c.role}
-                  </div>
-                </TooltipContent>
-              </Tooltip>
-            ))}
-
-            {extraCount > 0 && (
-              <div className="h-6 px-1.5 rounded-full bg-background-hover border border-border text-[10px] font-medium text-foreground flex items-center justify-center">
-                +{extraCount}
-              </div>
-            )}
-          </div>
+          <CollaboratorStack />
 
           <div className="h-3.5 w-px bg-border mx-0.5" />
 

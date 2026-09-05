@@ -12,6 +12,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { ConnectionStatus } from "@/components/features/collaboration/ConnectionStatus";
 
 export const StatusBar = () => {
   const {
@@ -32,9 +33,9 @@ export const StatusBar = () => {
     const ext = filePath.split(".").pop()?.toLowerCase() || "";
     switch (ext) {
       case "tsx":
-        return "TypeScript React";
+        return "JavaScript React";
       case "ts":
-        return "TypeScript";
+        return "JavaScript";
       case "jsx":
         return "JavaScript React";
       case "js":
@@ -131,29 +132,7 @@ export const StatusBar = () => {
           </div>
 
           {/* Collaboration Presence Indicator */}
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                onClick={() => {
-                  setActiveRightTab("collaborators");
-                  toggleRightPanel();
-                }}
-                className="flex items-center gap-1.5 hover:bg-black/20 bg-black/10 px-2 py-0.5 rounded font-medium text-[10px] transition-colors"
-              >
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400" />
-                </span>
-                <span>Connected — {collaborators.length} collaborators</span>
-              </button>
-            </TooltipTrigger>
-            <TooltipContent
-              side="top"
-              className="text-xs bg-background-overlay text-foreground border-border"
-            >
-              Real-time collaboration active with {collaborators.length} peers
-            </TooltipContent>
-          </Tooltip>
+          <ConnectionStatus />
         </div>
       </footer>
     </TooltipProvider>

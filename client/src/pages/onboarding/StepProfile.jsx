@@ -195,7 +195,7 @@ export const StepProfile = () => {
           onChange={(e) =>
             setProfile({ bio: e.target.value.substring(0, 160) })
           }
-          placeholder="I build things with TypeScript and coffee ☕"
+          placeholder="I build things with JavaScript and coffee ☕"
           rows={3}
           className="flex w-full rounded-lg border border-border bg-background-elevated px-3 py-2 text-sm text-foreground placeholder:text-foreground-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent resize-none transition-colors"
         />

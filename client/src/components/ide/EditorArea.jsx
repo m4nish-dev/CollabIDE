@@ -12,6 +12,10 @@ import {
   X,
 } from "lucide-react";
 import { useProjectStore } from "@/store/useProjectStore";
+import { useCollaborationStore } from "@/store/useCollaborationStore";
+import { RemoteCursor } from "@/components/features/collaboration/RemoteCursor";
+import { RemoteSelection } from "@/components/features/collaboration/RemoteSelection";
+import MonacoEditor from "@monaco-editor/react";
 import { COLLAB_IDE_THEME } from "@/lib/monacoTheme";
 import {
   Tooltip,
@@ -59,19 +63,20 @@ function findNodeByPath(nodes, path) {
 
 export const EditorArea = () => {
   const {
-    files,
     activeFileId,
-    openTabIds,
-    unsavedFileIds,
+    activeSecondaryFileId,
+    openFiles,
     setActiveFile,
-    closeTab,
-    updateFileContent,
+    closeFile,
+    fileSystem,
+    splitMode,
+    setSplitMode,
     setCursorPosition,
-    splitEditor,
-    toggleSplitEditor,
-    collaborators,
-    updateRemoteCursors,
   } = useProjectStore();
+
+  const { collaborators } = useCollaborationStore();
+
+  const [isFormatting, setIsFormatting] = useState(false);
 
   // Run remote cursor simulation every 3 seconds
   useEffect(() => {
@@ -83,7 +88,7 @@ export const EditorArea = () => {
 
   const activeNode = findNodeByPath(files, activeFileId);
   const secondaryFileId =
-    openTabIds.find((id) => id !== activeFileId) || "src/components/Header.tsx";
+    openTabIds.find((id) => id !== activeFileId) || "src/components/Header.jsx";
   const secondaryNode = findNodeByPath(files, secondaryFileId);
 
   const handleEditorMount = (editor, monaco) => {
@@ -281,8 +286,8 @@ export const EditorArea = () => {
               <Editor
                 height="100%"
                 path={activeNode.path}
-                defaultLanguage={activeNode.language || "typescript"}
-                language={activeNode.language || "typescript"}
+                defaultLanguage={activeNode.language || "JavaScript"}
+                language={activeNode.language || "JavaScript"}
                 value={activeNode.content || ""}
                 theme="collab-dark"
                 onMount={handleEditorMount}
@@ -328,48 +333,14 @@ export const EditorArea = () => {
 
             {/* Remote Collaborator Cursors & Selections Overlay */}
             {activeFileCollaborators.map((c) => {
-              if (!c.cursor) return null;
-              // Approximate visual coordinates for line height 21px and mono character width ~8.2px + 62px gutter
-              const topOffset = (c.cursor.lineNumber - 1) * 21 + 12;
-              const leftOffset = 62 + c.cursor.column * 8.2;
-
+              if (!c.cursorPosition) return null;
+              
               return (
-                <div
-                  key={c.id}
-                  className="pointer-events-none absolute transition-all duration-300 ease-out z-10"
-                  style={{
-                    top: `${topOffset}px`,
-                    left: `${leftOffset}px`,
-                  }}
-                >
-                  {/* Selection highlight if active */}
+                <div key={c.id}>
                   {c.selection && (
-                    <div
-                      className="absolute rounded-xs pointer-events-none"
-                      style={{
-                        top: 0,
-                        left: `${(c.selection.startColumn - c.cursor.column) * 8.2}px`,
-                        width: `${Math.abs(c.selection.endColumn - c.selection.startColumn) * 8.2}px`,
-                        height: "21px",
-                        backgroundColor: `${c.color}25`,
-                        border: `1px dashed ${c.color}80`,
-                      }}
-                    />
+                    <RemoteSelection selection={c.selection} color={c.color} />
                   )}
-
-                  {/* Vertical Caret */}
-                  <div
-                    className="w-0.5 h-[21px] shadow-sm animate-pulse"
-                    style={{ backgroundColor: c.color }}
-                  />
-
-                  {/* Name Tag Pill */}
-                  <div
-                    className="absolute -top-4 left-0 px-1.5 py-0.2 rounded-xs text-[9px] font-semibold tracking-wide text-white shadow-md flex items-center gap-1 whitespace-nowrap"
-                    style={{ backgroundColor: c.color }}
-                  >
-                    <span>{c.name.split(" ")[0]}</span>
-                  </div>
+                  <RemoteCursor collaborator={c} />
                 </div>
               );
             })}
@@ -391,7 +362,7 @@ export const EditorArea = () => {
                   <Editor
                     height="100%"
                     path={`split-${secondaryNode.path}`}
-                    defaultLanguage={secondaryNode.language || "typescript"}
+                    defaultLanguage={secondaryNode.language || "JavaScript"}
                     value={secondaryNode.content || ""}
                     theme="collab-dark"
                     options={{

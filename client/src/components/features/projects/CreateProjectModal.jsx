@@ -35,7 +35,7 @@ import { cn } from "@/lib/utils";
 const INLINE_TEMPLATES = [
   { id: "react-vite", name: "React", icon: "react", tag: "Vite 5" },
   { id: "nextjs-14", name: "Next.js", icon: "nextjs", tag: "App Router" },
-  { id: "nodejs-api", name: "Node.js", icon: "node", tag: "TypeScript" },
+  { id: "nodejs-api", name: "Node.js", icon: "node", tag: "JavaScript" },
   { id: "python-flask", name: "Python", icon: "python", tag: "Flask 3" },
   {
     id: "vanilla-html",
@@ -43,7 +43,7 @@ const INLINE_TEMPLATES = [
     icon: "html",
     tag: "No-Build",
   },
-  { id: "vite-ts", name: "Vite + TS", icon: "react", tag: "TypeScript" },
+  { id: "vite-ts", name: "Vite + TS", icon: "react", tag: "JavaScript" },
 ];
 
 const WORKSPACES = [

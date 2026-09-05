@@ -77,7 +77,7 @@ const CURSORS = [
 const CHIPS = [
   {
     name: "RC",
-    label: "editing App.tsx",
+    label: "editing App.jsx",
     color: "#7C5CFF",
     top: "18%",
     left: "60%",
@@ -85,7 +85,7 @@ const CHIPS = [
   },
   {
     name: "PA",
-    label: "viewing Header.tsx",
+    label: "viewing Header.jsx",
     color: "#22D3EE",
     top: "55%",
     left: "68%",
@@ -240,7 +240,7 @@ export const AuthVisual = () => {
           <span className="h-2.5 w-2.5 rounded-full bg-[#F59E0B]/70" />
           <span className="h-2.5 w-2.5 rounded-full bg-[#10B981]/70" />
           <span className="ml-2 text-[11px] text-white/30 font-mono">
-            Editor.tsx — CollabIDE
+            Editor.jsx — CollabIDE
           </span>
         </div>
 

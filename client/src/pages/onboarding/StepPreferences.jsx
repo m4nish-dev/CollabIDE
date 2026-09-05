@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 
 const LANGUAGES = [
   "JavaScript",
-  "TypeScript",
+  "JavaScript",
   "Python",
   "Go",
   "Rust",

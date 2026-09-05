@@ -1,7 +1,7 @@
 import "@/lib/mockData";
 
 export const LANG_CONFIG = {
-  TypeScript: { color: "#3B82F6", bg: "#3B82F614", label: "TS" },
+  JavaScript: { color: "#3B82F6", bg: "#3B82F614", label: "TS" },
   JavaScript: { color: "#F59E0B", bg: "#F59E0B14", label: "JS" },
   Python: { color: "#10B981", bg: "#10B98114", label: "Py" },
   Go: { color: "#22D3EE", bg: "#22D3EE14", label: "Go" },

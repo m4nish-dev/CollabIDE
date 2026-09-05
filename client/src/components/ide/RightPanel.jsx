@@ -16,6 +16,7 @@ import {
   Zap,
 } from "lucide-react";
 import { useProjectStore } from "@/store/useProjectStore";
+import { CollaboratorsPanel } from "@/components/features/collaboration/CollaboratorsPanel";
 import {
   Tooltip,
   TooltipContent,

@@ -1,4 +1,4 @@
-# React + TypeScript + Vite
+# React + JavaScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
@@ -18,7 +18,7 @@ If you are developing a production application, we recommend enabling type-aware
 ```json
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
+  "plugins": ["react", "JavaScript", "oxc"],
   "options": {
     "typeAware": true
   },

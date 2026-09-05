@@ -14,11 +14,11 @@ const SEED_PROJECT_FILES = [
         type: "folder",
         children: [
           {
-            id: "src-components-Header.tsx",
-            name: "Header.tsx",
-            path: "src/components/Header.tsx",
+            id: "src-components-Header.jsx",
+            name: "Header.jsx",
+            path: "src/components/Header.jsx",
             type: "file",
-            language: "typescript",
+            language: "javascript",
             content: `import React from 'react'
 import { Bell, Search, Sparkles, User } from 'lucide-react'
 
@@ -83,11 +83,11 @@ export const Header: React.FC<HeaderProps> = ({
 `,
           },
           {
-            id: "src-components-Sidebar.tsx",
-            name: "Sidebar.tsx",
-            path: "src/components/Sidebar.tsx",
+            id: "src-components-Sidebar.jsx",
+            name: "Sidebar.jsx",
+            path: "src/components/Sidebar.jsx",
             type: "file",
-            language: "typescript",
+            language: "javascript",
             content: `import React, { useState } from 'react'
 import { Code2, Files, GitPullRequest, Settings, Terminal } from 'lucide-react'
 
@@ -121,11 +121,11 @@ export const Sidebar: React.FC = () => {
 `,
           },
           {
-            id: "src-components-Button.tsx",
-            name: "Button.tsx",
-            path: "src/components/Button.tsx",
+            id: "src-components-Button.jsx",
+            name: "Button.jsx",
+            path: "src/components/Button.jsx",
             type: "file",
-            language: "typescript",
+            language: "javascript",
             content: `import React from 'react'
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -181,11 +181,11 @@ export const Button: React.FC<ButtonProps> = ({
         type: "folder",
         children: [
           {
-            id: "src-pages-Home.tsx",
-            name: "Home.tsx",
-            path: "src/pages/Home.tsx",
+            id: "src-pages-Home.jsx",
+            name: "Home.jsx",
+            path: "src/pages/Home.jsx",
             type: "file",
-            language: "typescript",
+            language: "javascript",
             content: `import React from 'react'
 import { Sparkles, ArrowRight, Zap, Users, Shield } from 'lucide-react'
 import { Button } from '../components/Button'
@@ -229,11 +229,11 @@ export const Home: React.FC = () => {
 `,
           },
           {
-            id: "src-pages-About.tsx",
-            name: "About.tsx",
-            path: "src/pages/About.tsx",
+            id: "src-pages-About.jsx",
+            name: "About.jsx",
+            path: "src/pages/About.jsx",
             type: "file",
-            language: "typescript",
+            language: "javascript",
             content: `import React from 'react'
 
 export const About: React.FC = () => {
@@ -251,11 +251,11 @@ export const About: React.FC = () => {
         ],
       },
       {
-        id: "src-App.tsx",
-        name: "App.tsx",
-        path: "src/App.tsx",
+        id: "src-App.jsx",
+        name: "App.jsx",
+        path: "src/App.jsx",
         type: "file",
-        language: "typescript",
+        language: "javascript",
         content: `import React, { useState } from 'react'
 import { Header } from './components/Header'
 import { Home } from './pages/Home'
@@ -275,11 +275,11 @@ export default function App() {
 `,
       },
       {
-        id: "src-main.tsx",
-        name: "main.tsx",
-        path: "src/main.tsx",
+        id: "src-main.jsx",
+        name: "main.jsx",
+        path: "src/main.jsx",
         type: "file",
-        language: "typescript",
+        language: "javascript",
         content: `import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
@@ -361,7 +361,7 @@ body {
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.3.0",
-    "typescript": "^5.5.0",
+    "javascript": "^5.5.0",
     "vite": "^5.4.0"
   }
 }
@@ -392,11 +392,11 @@ body {
 `,
   },
   {
-    id: "root-vite.config.ts",
-    name: "vite.config.ts",
-    path: "vite.config.ts",
+    id: "root-vite.config.js",
+    name: "vite.config.js",
+    path: "vite.config.js",
     type: "file",
-    language: "typescript",
+    language: "javascript",
     content: `import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
@@ -418,13 +418,13 @@ export default defineConfig({
     language: "markdown",
     content: `# CollabIDE Project Template
 
-A production-ready React 19 + TypeScript template running in real-time within the CollabIDE distributed sandbox.
+A production-ready React 19 + JavaScript template running in real-time within the CollabIDE distributed sandbox.
 
 ## Features
 - ⚡ **Instant HMR**: Blazing fast hot module reloading powered by Vite
 - 👥 **Multiplayer**: Live cursor tracking, shared terminal instances, and conflict-free editing
 - 🎨 **Tailwind CSS**: Full tokenized design system ready to use
-- 🛡️ **TypeScript**: Strict type-checking and automated IntelliSense
+- 🛡️ **JavaScript**: Strict type-checking and automated IntelliSense
 
 ## Getting Started
 \`\`\`bash
@@ -520,13 +520,13 @@ export const useProjectStore = create((set, get) => ({
     "v2-preview",
   ],
   files: SEED_PROJECT_FILES,
-  activeFileId: "src/App.tsx",
+  activeFileId: "src/App.jsx",
   openTabIds: [
-    "src/App.tsx",
-    "src/components/Header.tsx",
-    "src/components/Button.tsx",
+    "src/App.jsx",
+    "src/components/Header.jsx",
+    "src/components/Button.jsx",
   ],
-  unsavedFileIds: new Set(["src/components/Header.tsx"]),
+  unsavedFileIds: new Set(["src/components/Header.jsx"]),
   cursorPosition: { lineNumber: 12, column: 4 },
   splitEditor: false,
   isRunning: true,
@@ -580,7 +580,7 @@ export const useProjectStore = create((set, get) => ({
         {
           id: "3",
           type: "output",
-          text: "Changes not staged for commit:\n  modified:   src/components/Header.tsx",
+          text: "Changes not staged for commit:\n  modified:   src/components/Header.jsx",
         },
       ],
     },
@@ -595,7 +595,7 @@ export const useProjectStore = create((set, get) => ({
       avatar:
         "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&auto=format&fit=crop&q=80",
       color: "#22D3EE", // Cyan
-      activeFile: "src/App.tsx",
+      activeFile: "src/App.jsx",
       cursor: { lineNumber: 8, column: 22 },
       selection: {
         startLineNumber: 8,
@@ -612,7 +612,7 @@ export const useProjectStore = create((set, get) => ({
       avatar:
         "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&auto=format&fit=crop&q=80",
       color: "#F43F5E", // Rose
-      activeFile: "src/components/Header.tsx",
+      activeFile: "src/components/Header.jsx",
       cursor: { lineNumber: 24, column: 15 },
       selection: {
         startLineNumber: 24,
@@ -629,7 +629,7 @@ export const useProjectStore = create((set, get) => ({
       avatar:
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&auto=format&fit=crop&q=80",
       color: "#7C5CFF", // Electric Violet
-      activeFile: "src/App.tsx",
+      activeFile: "src/App.jsx",
       cursor: { lineNumber: 12, column: 4 },
       role: "Owner",
       status: "online",
@@ -640,7 +640,7 @@ export const useProjectStore = create((set, get) => ({
       avatar:
         "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&auto=format&fit=crop&q=80",
       color: "#10B981", // Emerald
-      activeFile: "src/components/Button.tsx",
+      activeFile: "src/components/Button.jsx",
       cursor: { lineNumber: 19, column: 30 },
       role: "Editor",
       status: "online",
@@ -651,7 +651,7 @@ export const useProjectStore = create((set, get) => ({
       avatar:
         "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&auto=format&fit=crop&q=80",
       color: "#F59E0B", // Amber
-      activeFile: "vite.config.ts",
+      activeFile: "vite.config.js",
       cursor: { lineNumber: 7, column: 14 },
       role: "Viewer",
       status: "idle",
@@ -661,7 +661,7 @@ export const useProjectStore = create((set, get) => ({
   problems: [
     {
       id: "p-1",
-      file: "src/components/Header.tsx",
+      file: "src/components/Header.jsx",
       line: 24,
       column: 15,
       message:
@@ -671,7 +671,7 @@ export const useProjectStore = create((set, get) => ({
     },
     {
       id: "p-2",
-      file: "src/components/Button.tsx",
+      file: "src/components/Button.jsx",
       line: 42,
       column: 7,
       message:
@@ -681,7 +681,7 @@ export const useProjectStore = create((set, get) => ({
     },
     {
       id: "p-3",
-      file: "src/App.tsx",
+      file: "src/App.jsx",
       line: 9,
       column: 26,
       message:
@@ -699,7 +699,7 @@ export const useProjectStore = create((set, get) => ({
         "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&auto=format&fit=crop&q=80",
       color: "#F43F5E",
       action: "modified",
-      target: "src/components/Header.tsx",
+      target: "src/components/Header.jsx",
       timestamp: "2 mins ago",
     },
     {
@@ -729,7 +729,7 @@ export const useProjectStore = create((set, get) => ({
         "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&auto=format&fit=crop&q=80",
       color: "#10B981",
       action: "commented on",
-      target: "src/components/Button.tsx",
+      target: "src/components/Button.jsx",
       timestamp: "18 mins ago",
     },
   ],
@@ -737,7 +737,7 @@ export const useProjectStore = create((set, get) => ({
   commentThreads: [
     {
       id: "comm-1",
-      file: "src/components/Button.tsx",
+      file: "src/components/Button.jsx",
       lineNumber: 19,
       author: "Alex Chen",
       avatar:
@@ -761,7 +761,7 @@ export const useProjectStore = create((set, get) => ({
     },
     {
       id: "comm-2",
-      file: "src/App.tsx",
+      file: "src/App.jsx",
       lineNumber: 11,
       author: "Rohit Sharma",
       avatar:
@@ -936,7 +936,7 @@ export const useProjectStore = create((set, get) => ({
         newLogs.push({
           id: `${Date.now()}-out`,
           type: "output",
-          text: "public/  src/  package.json  README.md  tsconfig.json  vite.config.ts",
+          text: "public/  src/  package.json  README.md  tsconfig.json  vite.config.js",
         });
       } else if (cmd === "pwd") {
         newLogs.push({
@@ -948,7 +948,7 @@ export const useProjectStore = create((set, get) => ({
         newLogs.push({
           id: `${Date.now()}-out`,
           type: "output",
-          text: `On branch ${state.currentBranch}\nYour branch is up to date with 'origin/${state.currentBranch}'.\nChanges not staged for commit:\n  (use "git add <file>..." to update what will be committed)\n\n\tmodified:   src/components/Header.tsx`,
+          text: `On branch ${state.currentBranch}\nYour branch is up to date with 'origin/${state.currentBranch}'.\nChanges not staged for commit:\n  (use "git add <file>..." to update what will be committed)\n\n\tmodified:   src/components/Header.jsx`,
         });
       } else if (cmd === "git log" || cmd === "git log -n 3") {
         newLogs.push({
@@ -979,12 +979,12 @@ export const useProjectStore = create((set, get) => ({
           {
             id: `${Date.now()}-1`,
             type: "output",
-            text: "PASS src/components/Button.test.tsx (3 tests)",
+            text: "PASS src/components/Button.test.jsx (3 tests)",
           },
           {
             id: `${Date.now()}-2`,
             type: "output",
-            text: "PASS src/components/Header.test.tsx (4 tests)",
+            text: "PASS src/components/Header.test.jsx (4 tests)",
           },
           {
             id: `${Date.now()}-3`,
@@ -1019,8 +1019,8 @@ export const useProjectStore = create((set, get) => ({
   createFile: (parentPath, name) => {
     const ext = name.includes(".") ? name.split(".").pop() || "" : "";
     const langMap = {
-      ts: "typescript",
-      tsx: "typescript",
+      ts: "javascript",
+      tsx: "javascript",
       js: "javascript",
       jsx: "javascript",
       json: "json",
