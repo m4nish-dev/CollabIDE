@@ -37,6 +37,32 @@
     @apply backdrop-blur-xl bg-background-overlay/80 border border-border;
   }
 
+  /* Micro-interactions: Cards lift on hover */
+  .hover-lift {
+    @apply transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg hover:shadow-accent/10 hover:border-accent/30;
+  }
+
+  /* Focus rings for accessibility and polish */
+  .focus-ring {
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+
+  /* Button active states (click scale down) */
+  .btn-active-scale {
+    @apply active:scale-95 transition-transform;
+  }
+
+  /* Icon subtle pulse or bounce on hover */
+  .icon-hover-bounce:hover {
+    animation: icon-bounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+  }
+
+  @keyframes icon-bounce {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+  }
+
   /* Smooth scrollbar styling */
   ::-webkit-scrollbar {
     width: 6px;
@@ -50,5 +76,17 @@
   }
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-foreground-subtle;
+  }
+
+  /* Accessibility: Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }

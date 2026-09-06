@@ -23,7 +23,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 
 export const RightPanel = () => {
   const {

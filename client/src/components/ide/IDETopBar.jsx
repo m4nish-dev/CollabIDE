@@ -28,8 +28,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { ShareModal } from "./ShareModal";
+import { ShareProjectModal } from "@/components/features/sharing/ShareProjectModal";
 import { CollaboratorStack } from "@/components/features/collaboration/CollaboratorStack";
+import { BranchSelector } from "@/components/features/sourceControl/BranchSelector";
+import { NotificationDropdown } from "@/components/features/notifications/NotificationDropdown";
 
 export const IDETopBar = () => {
   const {
@@ -125,36 +127,9 @@ export const IDETopBar = () => {
           <div className="h-3.5 w-px bg-border mx-0.5" />
 
           {/* Git Branch Selector */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="h-6 px-2 text-[11px] font-mono text-foreground-muted hover:text-foreground bg-background/50 hover:bg-background border border-border/80 rounded flex items-center gap-1.5 transition-colors">
-                <GitBranch className="h-3 w-3 text-accent" />
-                <span className="truncate max-w-[90px]">{currentBranch}</span>
-                <ChevronDown className="h-2.5 w-2.5 opacity-60" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="start"
-              className="w-48 bg-background-elevated border-border text-foreground"
-            >
-              <DropdownMenuLabel className="text-[10px] uppercase font-semibold text-foreground-subtle tracking-wider">
-                Switch Branch
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator className="bg-border" />
-              {branches.map((b) => (
-                <DropdownMenuItem
-                  key={b}
-                  onClick={() => setCurrentBranch(b)}
-                  className="text-xs font-mono flex items-center justify-between cursor-pointer focus:bg-background-hover focus:text-accent"
-                >
-                  <span className="truncate">{b}</span>
-                  {b === currentBranch && (
-                    <Check className="h-3.5 w-3.5 text-accent" />
-                  )}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="flex items-center">
+            <BranchSelector />
+          </div>
         </div>
 
         {/* Center: File Breadcrumb */}
@@ -230,6 +205,9 @@ export const IDETopBar = () => {
             )}
           </button>
 
+          {/* Notifications */}
+          <NotificationDropdown />
+
           {/* Settings gear */}
           <Tooltip>
             <TooltipTrigger asChild>
@@ -249,7 +227,7 @@ export const IDETopBar = () => {
         </div>
       </header>
 
-      <ShareModal
+      <ShareProjectModal
         isOpen={isShareModalOpen}
         onClose={() => setIsShareModalOpen(false)}
       />

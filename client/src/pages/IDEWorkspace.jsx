@@ -7,6 +7,8 @@ import { JoinNotification } from "@/components/features/collaboration/JoinNotifi
 import { IDETopBar } from "@/components/ide/IDETopBar";
 import { ActivityBar } from "@/components/ide/ActivityBar";
 import { FileExplorer } from "@/components/ide/FileExplorer";
+import { SourceControlPanel } from "@/components/features/sourceControl/SourceControlPanel";
+import { CommitHistoryPanel } from "@/components/features/sourceControl/CommitHistoryPanel";
 import { EditorArea } from "@/components/ide/EditorArea";
 import { BottomPanel } from "@/components/ide/BottomPanel";
 import { RightPanel } from "@/components/ide/RightPanel";
@@ -15,7 +17,8 @@ import { CommandPalette } from "@/components/ide/CommandPalette";
 import { QuickOpen } from "@/components/ide/QuickOpen";
 import { GlobalSearch } from "@/components/ide/GlobalSearch";
 import { FindInFiles } from "@/components/ide/FindInFiles";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
+import { MobileNotice } from "@/components/shared/MobileNotice";
 
 export default function IDEWorkspace() {
   const {
@@ -137,9 +140,9 @@ export default function IDEWorkspace() {
       {/* Top Bar (44px) */}
       <IDETopBar />
 
-      {/* Main Workspace Center Body */}
-      <div className="flex-1 flex overflow-hidden relative">
-        {/* Activity Bar (48px leftmost strip) */}
+      {/* Main Workspace Area */}
+      <main id="main-content" className="flex-1 flex overflow-hidden">
+        {/* Left Sidebars: Activity + Primary Panel */}
         <ActivityBar />
 
         {/* Resizable Horizontal Panels */}
@@ -157,6 +160,7 @@ export default function IDEWorkspace() {
                 >
                   {activeActivity === "explorer" && <FileExplorer />}
                   {activeActivity === "search" && <FindInFiles />}
+                  {activeActivity === "git" && <SourceControlPanel />}
                 </Panel>
                 <Separator className="w-1 bg-border/60 hover:bg-accent/70 active:bg-accent transition-colors cursor-col-resize z-10" />
               </>
@@ -222,7 +226,7 @@ export default function IDEWorkspace() {
             )}
           </Group>
         </div>
-      </div>
+      </main>
 
       {/* Status Bar (22px) */}
       <StatusBar />
@@ -232,6 +236,10 @@ export default function IDEWorkspace() {
       <CommandPalette />
       <QuickOpen />
       <GlobalSearch />
+      <CommitHistoryPanel />
+
+      {/* Mobile Notice Overlay */}
+      <MobileNotice />
     </div>
   );
 }

@@ -28,7 +28,7 @@ export const RecentProjects = ({ projects }) => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3.5">
         {recents.map((project, idx) => {
-          const lang = LANG_CONFIG[project.language];
+          const lang = LANG_CONFIG[project.language] || { color: "#EDEDF0", bg: "#EDEDF014", label: (project.language || "??").substring(0, 2).toUpperCase() };
           return (
             <motion.div
               key={project.id}

@@ -143,26 +143,22 @@ export const ActivitySidebar = ({ className }) => {
                 className="flex items-start gap-2.5 text-xs"
               >
                 <img
-                  src={act.collaborator.avatar}
-                  alt={act.collaborator.name}
+                  src={act.user?.avatar}
+                  alt={act.user?.name}
                   className="h-6 w-6 rounded-full object-cover shrink-0 mt-0.5 border border-border/80"
                 />
 
                 <div className="flex-1 min-w-0 leading-snug">
                   <span className="font-medium text-foreground mr-1">
-                    {act.collaborator.name.split(" ")[0]}
+                    {act.user?.name?.split(" ")[0]}
                   </span>
                   <span className="text-foreground-muted">{act.action}</span>{" "}
                   <span className="font-mono text-[11px] text-accent bg-accent/10 px-1.5 py-0.5 rounded border border-accent/20 break-all">
-                    {act.target}
+                    {act.target || act.project?.name}
                   </span>
                   <div className="flex items-center gap-1.5 text-[10px] text-foreground-subtle mt-0.5">
                     <Icon size={11} className="text-foreground-muted" />
-                    <span>
-                      {formatDistanceToNow(new Date(act.timestamp), {
-                        addSuffix: true,
-                      })}
-                    </span>
+                    <span>{act.time}</span>
                   </div>
                 </div>
               </motion.div>

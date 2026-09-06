@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useProjectStore } from "@/store/useProjectStore";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 
 export const ShareModal = ({ isOpen, onClose }) => {
   const { projectName, collaborators } = useProjectStore();

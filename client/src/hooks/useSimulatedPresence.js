@@ -60,7 +60,7 @@ export function useSimulatedPresence() {
     }, 3000); // every 3 seconds
 
     return () => clearInterval(interval);
-  }, []);
+  }, [updateCollaboratorFile, updateCollaboratorStatus, updateCollaboratorCursor, updateCollaboratorSelection]);
 
   // Offline/Online simulation loop
   useEffect(() => {
@@ -82,7 +82,7 @@ export function useSimulatedPresence() {
     }, 15000); // every 15 seconds
 
     return () => clearInterval(interval);
-  }, []);
+  }, [updateCollaboratorStatus, addJoinNotification]);
 
   // Connection drop simulation
   useEffect(() => {
@@ -94,5 +94,5 @@ export function useSimulatedPresence() {
     }, 45000); // every 45 seconds
 
     return () => clearInterval(interval);
-  }, []);
+  }, [setConnectionStatus]);
 }

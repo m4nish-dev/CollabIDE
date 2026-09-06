@@ -68,15 +68,21 @@ export const EditorArea = () => {
     openFiles,
     setActiveFile,
     closeFile,
+    closeTab,
     fileSystem,
+    files,
+    openTabIds,
+    unsavedFileIds,
     splitMode,
+    splitEditor,
     setSplitMode,
+    toggleSplitEditor,
     setCursorPosition,
+    updateFileContent,
+    updateRemoteCursors,
   } = useProjectStore();
 
   const { collaborators } = useCollaborationStore();
-
-  const [isFormatting, setIsFormatting] = useState(false);
 
   // Run remote cursor simulation every 3 seconds
   useEffect(() => {

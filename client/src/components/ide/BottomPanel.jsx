@@ -17,6 +17,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { EmptyState } from "@/components/shared/EmptyState";
 
 export const BottomPanel = ({ onToggleMaximize, isMaximized = false }) => {
   const {
@@ -256,8 +257,19 @@ export const BottomPanel = ({ onToggleMaximize, isMaximized = false }) => {
               {/* Terminal Logs & Interactive Prompt */}
               <div
                 onClick={() => terminalInputRef.current?.focus()}
-                className="flex-1 overflow-y-auto p-3 space-y-1 cursor-text select-text"
+                className="flex-1 overflow-y-auto p-3 space-y-1 cursor-text select-text flex flex-col"
               >
+                {activeTerminal.logs.length === 0 && (
+                  <div className="flex-1 flex items-center justify-center">
+                    <EmptyState
+                      size="sm"
+                      icon={<TerminalIcon className="h-6 w-6 text-foreground-muted" />}
+                      title="No terminal history"
+                      description="Type a command to get started."
+                    />
+                  </div>
+                )}
+                
                 {activeTerminal.logs.map((log) => (
                   <div key={log.id} className="leading-relaxed">
                     {log.type === "system" && (

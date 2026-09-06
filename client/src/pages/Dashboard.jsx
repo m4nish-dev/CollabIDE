@@ -23,6 +23,7 @@ import { PROJECTS } from "@/lib/mockData";
 import { ProjectCard } from "@/components/dashboard/ProjectCard";
 import { QuickActions } from "@/components/dashboard/QuickActions";
 import { StatsStrip } from "@/components/dashboard/StatsStrip";
+import { EmptyState } from "@/components/shared/EmptyState";
 import { RecentProjects } from "@/components/dashboard/RecentProjects";
 import { ActivitySidebar } from "@/components/dashboard/ActivitySidebar";
 import { CreateProjectModal } from "@/components/features/projects/CreateProjectModal";
@@ -415,52 +416,36 @@ export default function Dashboard({ defaultTab = "all" }) {
             )
           ) : (
             /* Empty State when no results found */
-            <motion.div
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="flex flex-col items-center justify-center p-12 text-center rounded-2xl border border-dashed border-border bg-background-elevated/20 my-6"
-            >
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/10 text-accent mb-4 border border-accent/20">
-                <SearchX size={22} />
-              </div>
-              <h3 className="text-base font-semibold text-foreground">
-                No projects found
-              </h3>
-              <p className="text-xs text-foreground-muted max-w-sm mt-1 mb-4 leading-relaxed">
-                No projects match your current search or filters. Try adjusting
-                your query or resetting filters.
-              </p>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={handleClearFilters}
-              >
-                Clear filters
-              </Button>
-            </motion.div>
+            projectsList.length > 0 && (
+              <EmptyState 
+                icon={<SearchX size={24} />}
+                title="No projects found"
+                description="No projects match your current search or filters. Try adjusting your query or resetting filters."
+                action={
+                  <Button variant="secondary" onClick={handleClearFilters}>
+                    Clear filters
+                  </Button>
+                }
+              />
+            )
           )}
 
           {/* Full zero projects empty state (if all projects were 0) */}
           {projectsList.length === 0 && (
-            <div className="flex flex-col items-center justify-center p-16 text-center rounded-2xl border border-dashed border-border bg-background-elevated/20">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-accent/20 to-accent/5 text-accent border border-accent/20 mb-4 shadow-[0_0_30px_rgba(124,92,255,0.15)]">
-                <FolderPlus size={28} />
-              </div>
-              <h3 className="text-lg font-bold text-foreground">
-                No projects yet
-              </h3>
-              <p className="text-sm text-foreground-muted max-w-md mt-1.5 mb-6">
-                Get started by creating your very first collaborative cloud
-                project with real-time sync.
-              </p>
-              <Button
-                variant="primary"
-                onClick={() => setModalOpen(true)}
-                className="gap-2 shadow-[0_0_24px_rgba(124,92,255,0.3)]"
-              >
-                <Plus size={16} /> Create your first project
-              </Button>
-            </div>
+            <EmptyState 
+              icon={<FolderPlus size={28} className="text-accent" />}
+              title="No projects yet"
+              description="Get started by creating your very first collaborative cloud project with real-time sync."
+              action={
+                <Button 
+                  variant="primary" 
+                  onClick={() => setModalOpen(true)}
+                  className="gap-2 shadow-[0_0_24px_rgba(124,92,255,0.3)]"
+                >
+                  <Plus size={16} /> Create your first project
+                </Button>
+              }
+            />
           )}
         </div>
       </div>

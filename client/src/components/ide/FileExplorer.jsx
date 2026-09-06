@@ -21,6 +21,7 @@ import {
 import { DndContext, useDraggable, useDroppable } from "@dnd-kit/core";
 import { useProjectStore } from "@/store/useProjectStore";
 import { PresenceIndicator } from "@/components/features/collaboration/PresenceIndicator";
+import { EmptyState } from "@/components/shared/EmptyState";
 import {
   ContextMenu,
   ContextMenuContent,
@@ -34,7 +35,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 
 // Helper for color-coded file icons
 function getFileIcon(filename) {
@@ -489,7 +490,28 @@ export const FileExplorer = () => {
                 </div>
               )}
 
-              {node.children && renderTree(node.children, depth + 1)}
+              {node.children && node.children.length > 0 ? (
+                renderTree(node.children, depth + 1)
+              ) : (
+                isCreatingFile !== node.path && isCreatingFolder !== node.path && (
+                  <div style={{ paddingLeft: `${(depth + 1) * 12 + 20}px` }} className="pr-2 py-1">
+                    <EmptyState
+                      size="sm"
+                      icon={<FolderOpen className="h-6 w-6 text-foreground-muted" />}
+                      title="This folder is empty"
+                      description="Create a file to get started."
+                      action={
+                        <button 
+                          onClick={() => setIsCreatingFile(node.path)}
+                          className="text-[10px] bg-background-elevated hover:bg-background-hover border border-border px-2 py-1 rounded text-foreground transition-colors"
+                        >
+                          New File
+                        </button>
+                      }
+                    />
+                  </div>
+                )
+              )}
             </>
           )}
         </React.Fragment>
@@ -640,7 +662,28 @@ export const FileExplorer = () => {
                     </div>
                   )}
 
-                  {renderTree(files, 1)}
+                  {files.length > 0 ? (
+                    renderTree(files, 1)
+                  ) : (
+                    isCreatingFile !== "root-project" && isCreatingFolder !== "root-project" && (
+                      <div className="px-2 py-1">
+                        <EmptyState
+                          size="sm"
+                          icon={<FolderOpen className="h-6 w-6 text-foreground-muted" />}
+                          title="This project is empty"
+                          description="Create a file to start coding."
+                          action={
+                            <button 
+                              onClick={() => setIsCreatingFile("root-project")}
+                              className="text-[10px] bg-background-elevated hover:bg-background-hover border border-border px-2 py-1 rounded text-foreground transition-colors"
+                            >
+                              New File
+                            </button>
+                          }
+                        />
+                      </div>
+                    )
+                  )}
                 </div>
               )}
             </div>

@@ -3,7 +3,7 @@ import { Command } from "cmdk";
 import { AnimatePresence, motion } from "framer-motion";
 import { Search, Code, FileCode, FileSpreadsheet, FileText, Layers, Terminal, Settings, User, Box } from "lucide-react";
 import { useProjectStore } from "@/store/useProjectStore";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 import { useNavigate } from "react-router-dom";
 
 function getAllFiles(nodes) {

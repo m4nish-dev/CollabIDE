@@ -1,32 +1,61 @@
-# React + JavaScript + Vite
+# CollabIDE
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+CollabIDE is a browser-based collaborative Integrated Development Environment (IDE) designed for modern web development. Built with React and tailored for an exceptional developer experience, it features a comprehensive design system, a rich file explorer, integrated source control, and a customizable terminal interface.
 
-Currently, two official plugins are available:
+## 🚀 Tech Stack
+- **Frontend Framework**: React 19 + Vite
+- **Styling**: TailwindCSS, CSS Variables (Custom Design System)
+- **State Management**: Zustand
+- **Animations**: Framer Motion
+- **Editor**: Monaco Editor (`@monaco-editor/react`)
+- **Routing**: React Router DOM v7
+- **Icons**: Lucide React
+- **Components**: Radix UI Primitives (Accessible components)
+- **Form Handling & Validation**: React Hook Form, Zod
+- **Linting & Formatting**: ESLint, Prettier
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 📂 Folder Structure
+\`\`\`
+client/
+├── public/                 # Static assets
+├── src/
+│   ├── components/
+│   │   ├── features/       # Complex domain-specific features (e.g. source control)
+│   │   ├── ide/            # IDE layout components (File explorer, Terminal, Panels)
+│   │   ├── layout/         # App layouts and wrappers (AppShell, SettingsLayout)
+│   │   ├── shared/         # Reusable UI building blocks (Skeletons, empty states)
+│   │   └── ui/             # Core base components (Buttons, inputs, dropdowns)
+│   ├── hooks/              # Custom React hooks
+│   ├── lib/                # Utility functions, mock data, and constants
+│   ├── pages/              # Route level components
+│   └── store/              # Zustand state stores
+├── index.css               # Global CSS and Tailwind directives
+└── App.jsx                 # Application entry point and routing
+\`\`\`
 
-## React Compiler
+## 🛠️ How to run locally
+1. Install dependencies
+   \`\`\`bash
+   npm install
+   \`\`\`
+2. Copy environment variables
+   \`\`\`bash
+   cp .env.example .env
+   \`\`\`
+3. Start the development server
+   \`\`\`bash
+   npm run dev
+   \`\`\`
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🎨 Design System Tokens
+CollabIDE uses a custom design system with semantic variables:
+- **Backgrounds**: `bg-background`, `bg-background-elevated`, `bg-background-hover`
+- **Text**: `text-foreground`, `text-foreground-muted`, `text-foreground-subtle`
+- **Accents**: `accent`, `accent-hover`, `accent-glow` (default purple theme)
+- **Borders**: `border-border`, `border-border-strong`
 
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "JavaScript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
-
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## 🛣️ Roadmap
+- **Phase 1 (Current)**: Frontend architecture, UX design, mock state modeling.
+- **Phase 2 (Upcoming)**: Backend integration (Node.js/Express).
+- **Phase 3 (Upcoming)**: WebSockets (Real-time collaborative editing using Yjs or similar).
+- **Phase 4 (Upcoming)**: Containerized environments (Docker integration for real terminal execution).

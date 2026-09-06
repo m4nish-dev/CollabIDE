@@ -27,7 +27,7 @@ import {
   Files,
 } from "lucide-react";
 import { useProjectStore } from "@/store/useProjectStore";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 import { useNavigate } from "react-router-dom";
 
 export const CommandPalette = () => {

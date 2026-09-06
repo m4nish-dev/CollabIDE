@@ -110,7 +110,7 @@ const CardMenu = ({ project, onStar }) => (
 export const ProjectCard = ({ project, index = 0, view = "grid" }) => {
   const navigate = useNavigate();
   const [starred, setStarred] = useState(project.starred);
-  const lang = LANG_CONFIG[project.language];
+  const lang = LANG_CONFIG[project.language] || { color: "#EDEDF0", bg: "#EDEDF014", label: (project.language || "??").substring(0, 2).toUpperCase() };
 
   const handleNavigate = () => navigate(`/project/${project.id}`);
 

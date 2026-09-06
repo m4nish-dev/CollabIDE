@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { GIT_COMMITS, GIT_WORKING_TREE, GIT_BRANCHES } from "../lib/mockData";
 
 const SEED_PROJECT_FILES = [
   {
@@ -512,13 +513,9 @@ function insertNode(nodes, parentPath, newNode) {
 export const useProjectStore = create((set, get) => ({
   projectName: "collab-dashboard",
   currentBranch: "main",
-  branches: [
-    "main",
-    "feat/auth-flow",
-    "fix/cursor-sync",
-    "refactor/monaco-theme",
-    "v2-preview",
-  ],
+  branches: GIT_BRANCHES,
+  gitCommits: GIT_COMMITS,
+  gitWorkingTree: GIT_WORKING_TREE,
   files: SEED_PROJECT_FILES,
   activeFileId: "src/App.jsx",
   openTabIds: [
@@ -534,10 +531,12 @@ export const useProjectStore = create((set, get) => ({
   isCommandPaletteOpen: false,
   isQuickOpenOpen: false,
   isGlobalSearchOpen: false,
+  isCommitHistoryOpen: false,
 
   setIsCommandPaletteOpen: (isOpen) => set({ isCommandPaletteOpen: isOpen }),
   setIsQuickOpenOpen: (isOpen) => set({ isQuickOpenOpen: isOpen }),
   setIsGlobalSearchOpen: (isOpen) => set({ isGlobalSearchOpen: isOpen }),
+  setIsCommitHistoryOpen: (isOpen) => set({ isCommitHistoryOpen: isOpen }),
 
   activeActivity: "explorer",
   isSidebarOpen: true,
@@ -775,7 +774,50 @@ export const useProjectStore = create((set, get) => ({
   ],
 
   setProjectName: (name) => set({ projectName: name }),
-  setCurrentBranch: (branch) => set({ currentBranch: branch }),
+  setCurrentBranch: (branch) => set({ currentBranch: typeof branch === 'string' ? branch : branch.name }),
+  setBranches: (branches) => set({ branches }),
+  setGitCommits: (commits) => set({ gitCommits: commits }),
+  setGitWorkingTree: (tree) => set({ gitWorkingTree: tree }),
+  
+  stageFile: (fileId) =>
+    set((state) => ({
+      gitWorkingTree: state.gitWorkingTree.map((f) =>
+        f.id === fileId ? { ...f, staged: true } : f
+      ),
+    })),
+    
+  unstageFile: (fileId) =>
+    set((state) => ({
+      gitWorkingTree: state.gitWorkingTree.map((f) =>
+        f.id === fileId ? { ...f, staged: false } : f
+      ),
+    })),
+    
+  commitChanges: (message) =>
+    set((state) => {
+      const newCommit = {
+        id: `commit_new_${Date.now()}`,
+        hash: Math.random().toString(16).substr(2, 7),
+        author: state.collaborators[0],
+        message,
+        timestamp: new Date().toISOString(),
+        stats: { files: 1, insertions: 10, deletions: 2 },
+        branches: [state.currentBranch],
+      };
+      return {
+        gitCommits: [newCommit, ...state.gitCommits],
+        gitWorkingTree: state.gitWorkingTree.filter((f) => !f.staged),
+      };
+    }),
+    
+  createBranch: (name, switchTo = true) =>
+    set((state) => {
+      const newBranch = { id: `b_${Date.now()}`, name, type: "local" };
+      return {
+        branches: [...state.branches, newBranch],
+        currentBranch: switchTo ? name : state.currentBranch,
+      };
+    }),
 
   setActiveFile: (idOrPath) => {
     const node = findNodeByPath(get().files, idOrPath);
