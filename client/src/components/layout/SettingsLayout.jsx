@@ -48,8 +48,8 @@ export const SettingsLayout = ({ children, title, description }) => {
   }, [isSaving]);
 
   return (
-    <AppShell>
-      <div className="flex h-full bg-background relative">
+    <AppShell mainClassName="p-0">
+      <div className="flex flex-1 bg-background relative">
         {/* Left Nav */}
         <div className="w-64 border-r border-border bg-background-elevated overflow-y-auto hidden md:block shrink-0">
           <div className="p-6">

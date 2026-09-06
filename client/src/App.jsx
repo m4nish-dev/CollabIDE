@@ -75,7 +75,7 @@ const AppRoutes = () => {
     <>
       <TopProgressBar />
       <AnimatePresence mode="wait">
-        <Routes location={location} key={location.pathname}>
+        <Routes location={location}>
           {/* Public / auth routes */}
           <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
           <Route path="/signup" element={<PageTransition><Signup /></PageTransition>} />
@@ -143,7 +143,7 @@ function App() {
   return (
     <ErrorBoundary>
       <SkipToContent />
-      <ThemeProvider defaultTheme="dark">
+      <ThemeProvider>
         <BrowserRouter>
           <AppRoutes />
         </BrowserRouter>

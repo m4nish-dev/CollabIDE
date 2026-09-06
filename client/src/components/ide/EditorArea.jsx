@@ -16,7 +16,8 @@ import { useCollaborationStore } from "@/store/useCollaborationStore";
 import { RemoteCursor } from "@/components/features/collaboration/RemoteCursor";
 import { RemoteSelection } from "@/components/features/collaboration/RemoteSelection";
 import MonacoEditor from "@monaco-editor/react";
-import { COLLAB_IDE_THEME } from "@/lib/monacoTheme";
+import { COLLAB_IDE_THEME, COLLAB_LIGHT_THEME } from "@/lib/monacoTheme";
+import { useSettingsStore } from "@/store/useSettingsStore";
 import {
   Tooltip,
   TooltipContent,
@@ -83,6 +84,10 @@ export const EditorArea = () => {
   } = useProjectStore();
 
   const { collaborators } = useCollaborationStore();
+  
+  const settingsTheme = useSettingsStore(state => state.appearance?.theme || "dark");
+  const isLight = settingsTheme === "light" || (settingsTheme === "system" && !window.matchMedia("(prefers-color-scheme: dark)").matches);
+  const monacoThemeName = isLight ? "collab-light" : "collab-dark";
 
   // Run remote cursor simulation every 3 seconds
   useEffect(() => {
@@ -99,7 +104,8 @@ export const EditorArea = () => {
 
   const handleEditorMount = (editor, monaco) => {
     monaco.editor.defineTheme("collab-dark", COLLAB_IDE_THEME);
-    monaco.editor.setTheme("collab-dark");
+    monaco.editor.defineTheme("collab-light", COLLAB_LIGHT_THEME);
+    monaco.editor.setTheme(monacoThemeName);
 
     editor.onDidChangeCursorPosition((e) => {
       setCursorPosition({
@@ -121,7 +127,7 @@ export const EditorArea = () => {
 
   return (
     <TooltipProvider delayDuration={150}>
-      <div className="h-full w-full bg-[#0E0E12] flex flex-col overflow-hidden select-none">
+      <div className="h-full w-full bg-background flex flex-col overflow-hidden select-none">
         {/* Top Tab Bar */}
         <div className="h-9 bg-background-elevated border-b border-border flex items-center justify-between shrink-0">
           {/* Scrollable tabs */}
@@ -143,7 +149,7 @@ export const EditorArea = () => {
                   onClick={() => setActiveFile(tabPath)}
                   className={`group relative h-full flex items-center gap-2 px-3 border-r border-border cursor-pointer text-xs transition-colors shrink-0 ${
                     isActive
-                      ? "bg-[#0E0E12] text-foreground font-medium"
+                      ? "bg-background text-foreground font-medium"
                       : "bg-background-elevated text-foreground-muted hover:bg-background-hover hover:text-foreground"
                   }`}
                 >
@@ -228,7 +234,7 @@ export const EditorArea = () => {
         </div>
 
         {/* Breadcrumb Bar (30px) */}
-        <div className="h-[30px] px-4 bg-[#0E0E12] border-b border-border/50 flex items-center justify-between shrink-0 text-xs font-mono select-none">
+        <div className="h-[30px] px-4 bg-background border-b border-border/50 flex items-center justify-between shrink-0 text-xs font-mono select-none">
           <div className="flex items-center gap-1.5 text-foreground-muted truncate">
             {breadcrumbSegments.map((segment, index) => (
               <React.Fragment key={index}>
@@ -295,7 +301,7 @@ export const EditorArea = () => {
                 defaultLanguage={activeNode.language || "JavaScript"}
                 language={activeNode.language || "JavaScript"}
                 value={activeNode.content || ""}
-                theme="collab-dark"
+                theme={monacoThemeName}
                 onMount={handleEditorMount}
                 onChange={(val) =>
                   updateFileContent(activeNode.path, val || "")
@@ -355,7 +361,7 @@ export const EditorArea = () => {
           {/* Split Editor Secondary Pane */}
           {splitEditor && (
             <div className="flex-1 relative h-full border-l border-border/80 flex flex-col">
-              <div className="h-[30px] px-3 bg-[#0E0E12] border-b border-border/50 flex items-center justify-between text-xs font-mono">
+              <div className="h-[30px] px-3 bg-background border-b border-border/50 flex items-center justify-between text-xs font-mono">
                 <span className="text-foreground-muted">
                   {secondaryNode?.name || "Split View"}
                 </span>
@@ -370,7 +376,7 @@ export const EditorArea = () => {
                     path={`split-${secondaryNode.path}`}
                     defaultLanguage={secondaryNode.language || "JavaScript"}
                     value={secondaryNode.content || ""}
-                    theme="collab-dark"
+                    theme={monacoThemeName}
                     options={{
                       readOnly: true,
                       fontSize: 13,

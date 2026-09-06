@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Plus,
@@ -17,7 +17,8 @@ import {
   PanelRightOpen,
 } from "lucide-react";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useSettingsStore } from "@/store/useSettingsStore";
 
 import { PROJECTS } from "@/lib/mockData";
 import { ProjectCard } from "@/components/dashboard/ProjectCard";
@@ -39,16 +40,25 @@ import { cn } from "@/lib/utils";
 
 export default function Dashboard({ defaultTab = "all" }) {
   const navigate = useNavigate();
+  const profile = useSettingsStore(state => state.profile);
   const [projectsList] = useState(PROJECTS);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTab, setSelectedTab] = useState(null);
   const activeTab = selectedTab ?? defaultTab;
+  
+  // Reset selectedTab if the route (defaultTab prop) changes
+  useEffect(() => {
+    setSelectedTab(null);
+  }, [defaultTab]);
+
   const [selectedLanguage, setSelectedLanguage] = useState("All");
   const [sortOption, setSortOption] = useState("modified");
   const [viewMode, setViewMode] = useState("grid");
   const [modalOpen, setModalOpen] = useState(false);
   const [modalSource, setModalSource] = useState("blank");
   const [showSidebar, setShowSidebar] = useState(true);
+  const location = useLocation();
+  const showWidgets = location.pathname === "/dashboard" && activeTab === "all";
 
   // Dynamic greeting based on time of day
   const greeting = useMemo(() => {
@@ -138,7 +148,7 @@ export default function Dashboard({ defaultTab = "all" }) {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
-              {greeting}, Rohit
+              {greeting}, {profile?.displayName?.split(" ")[0] || "User"}
             </h1>
             <p className="text-sm text-foreground-muted mt-1">
               You have 3 active projects and 2 pending invitations
@@ -174,30 +184,34 @@ export default function Dashboard({ defaultTab = "all" }) {
           </div>
         </div>
 
-        {/* 2. Quick Actions Row */}
-        <QuickActions
-          onNewProject={() => {
-            setModalSource("blank");
-            setModalOpen(true);
-          }}
-          onImportGithub={() => {
-            setModalSource("github");
-            setModalOpen(true);
-          }}
-          onBrowseTemplates={() => navigate("/templates")}
-          onInviteTeammates={() => alert("Invite Teammates dialog")}
-        />
+        {showWidgets && (
+          <>
+            {/* 2. Quick Actions Row */}
+            <QuickActions
+              onNewProject={() => {
+                setModalSource("blank");
+                setModalOpen(true);
+              }}
+              onImportGithub={() => {
+                setModalSource("github");
+                setModalOpen(true);
+              }}
+              onBrowseTemplates={() => navigate("/templates")}
+              onInviteTeammates={() => alert("Invite Teammates dialog")}
+            />
 
-        {/* 3. Stats Strip */}
-        <StatsStrip
-          totalProjects={projectsList.length}
-          activeCollaborators={8}
-          runsThisWeek={47}
-          storageUsedMB={340}
-        />
+            {/* 3. Stats Strip */}
+            <StatsStrip
+              totalProjects={projectsList.length}
+              activeCollaborators={8}
+              runsThisWeek={47}
+              storageUsedMB={340}
+            />
 
-        {/* 4. Recent Projects Row */}
-        <RecentProjects projects={projectsList.filter((p) => !p.archived)} />
+            {/* 4. Recent Projects Row */}
+            <RecentProjects projects={projectsList.filter((p) => !p.archived)} />
+          </>
+        )}
 
         {/* 5. All Projects Section */}
         <div className="space-y-4 pt-2">

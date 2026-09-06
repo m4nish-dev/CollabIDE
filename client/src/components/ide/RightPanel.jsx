@@ -123,7 +123,7 @@ export const RightPanel = () => {
         <div className="flex-1 overflow-hidden flex flex-col">
           {/* TAB 1: PREVIEW */}
           {activeRightTab === "preview" && (
-            <div className="flex-1 flex flex-col bg-[#0A0A0D] overflow-hidden">
+            <div className="flex-1 flex flex-col bg-background overflow-hidden">
               {/* Browser Address Bar & Device Controls */}
               <div className="p-2 border-b border-border bg-background-elevated/70 flex items-center gap-1.5 shrink-0">
                 <div className="flex items-center gap-1 bg-background border border-border rounded px-1.5 py-0.5">

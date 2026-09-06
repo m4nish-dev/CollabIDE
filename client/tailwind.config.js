@@ -4,35 +4,36 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
         background: {
-          DEFAULT: '#0A0A0B',    // near-black canvas
-          elevated: '#111114',   // cards, sidebars
-          overlay:  '#17171C',   // modals, popovers
-          hover:    '#1C1C22',
+          DEFAULT: 'rgb(var(--bg-default) / <alpha-value>)',
+          elevated: 'rgb(var(--bg-elevated) / <alpha-value>)',
+          overlay:  'rgb(var(--bg-overlay) / <alpha-value>)',
+          hover:    'rgb(var(--bg-hover) / <alpha-value>)',
         },
         border: {
-          DEFAULT: '#1F1F26',
-          strong:  '#2A2A33',
+          DEFAULT: 'rgb(var(--border-default) / <alpha-value>)',
+          strong:  'rgb(var(--border-strong) / <alpha-value>)',
         },
         foreground: {
-          DEFAULT: '#EDEDF0',    // primary text
-          muted:   '#9494A0',    // secondary text
-          subtle:  '#5C5C68',    // tertiary text
+          DEFAULT: 'rgb(var(--fg-default) / <alpha-value>)',
+          muted:   'rgb(var(--fg-muted) / <alpha-value>)',
+          subtle:  'rgb(var(--fg-subtle) / <alpha-value>)',
         },
         accent: {
-          DEFAULT: '#7C5CFF',    // electric violet — primary CTA
-          hover:   '#8F72FF',
-          glow:    'rgba(124, 92, 255, 0.35)',
+          DEFAULT: 'rgb(var(--accent-default) / <alpha-value>)',
+          hover:   'rgb(var(--accent-hover) / <alpha-value>)',
+          glow:    'var(--accent-glow)',
         },
         secondary: {
-          DEFAULT: '#22D3EE',    // cyan — highlights, presence
+          DEFAULT: 'rgb(var(--secondary) / <alpha-value>)',
         },
-        success: '#10B981',
-        warning: '#F59E0B',
-        danger:  '#EF4444',
+        success: 'rgb(var(--success) / <alpha-value>)',
+        warning: 'rgb(var(--warning) / <alpha-value>)',
+        danger:  'rgb(var(--danger) / <alpha-value>)',
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],

@@ -109,7 +109,7 @@ export const BottomPanel = ({ onToggleMaximize, isMaximized = false }) => {
 
   return (
     <TooltipProvider delayDuration={150}>
-      <div className="h-full w-full bg-[#0A0A0D] border-t border-border flex flex-col select-none overflow-hidden font-mono text-xs">
+      <div className="h-full w-full bg-background border-t border-border flex flex-col select-none overflow-hidden font-mono text-xs">
         {/* Panel Header */}
         <div className="h-8 bg-background-elevated border-b border-border/80 px-3 flex items-center justify-between shrink-0 font-sans">
           {/* Tabs */}
@@ -224,9 +224,9 @@ export const BottomPanel = ({ onToggleMaximize, isMaximized = false }) => {
         <div className="flex-1 overflow-hidden flex">
           {/* TAB 1: TERMINAL */}
           {activeBottomTab === "terminal" && (
-            <div className="flex-1 flex flex-col h-full bg-[#0A0A0D]">
+            <div className="flex-1 flex flex-col h-full bg-background">
               {/* Terminal Sessions Sub-bar (if multiple) */}
-              <div className="h-6 bg-[#0E0E12] border-b border-border/50 px-3 flex items-center gap-2 overflow-x-auto shrink-0 font-sans">
+              <div className="h-6 bg-background border-b border-border/50 px-3 flex items-center gap-2 overflow-x-auto shrink-0 font-sans">
                 {terminals.map((term) => (
                   <div
                     key={term.id}

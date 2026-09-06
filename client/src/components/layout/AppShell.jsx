@@ -18,6 +18,7 @@ import {
   LogOut,
   User,
   ChevronDown,
+  Plus,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -38,6 +39,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { mockUser } from "@/lib/mockUser";
+import { useSettingsStore } from "@/store/useSettingsStore";
 
 // ─────────────────────────────────────────────
 // Nav config
@@ -120,6 +122,10 @@ const SidebarNavItem = ({ item, collapsed }) => {
 
 const Sidebar = ({ collapsed, onToggle }) => {
   const navigate = useNavigate();
+  const profile = useSettingsStore(state => state.profile);
+  const account = useSettingsStore(state => state.account);
+  const workspaceGeneral = useSettingsStore(state => state.workspaceGeneral);
+  
   return (
     <motion.aside
       animate={{ width: collapsed ? 64 : 240 }}
@@ -157,32 +163,55 @@ const Sidebar = ({ collapsed, onToggle }) => {
       {/* Bottom: workspace, settings, user */}
       <div className="border-t border-border p-2 space-y-1">
         {/* Workspace Switcher */}
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <button
-              className={cn(
-                "w-full flex items-center gap-2 rounded-md px-2 py-2 text-sm text-foreground-muted hover:bg-background-hover hover:text-foreground transition-colors",
-                collapsed && "justify-center",
-              )}
-            >
-              <div className="h-5 w-5 rounded bg-gradient-to-br from-accent to-secondary shrink-0" />
-              {!collapsed && (
-                <>
-                  <span className="flex-1 text-left font-medium text-foreground text-xs truncate">
-                    {mockUser.workspace}
-                  </span>
-                  <ChevronsUpDown
-                    size={13}
-                    className="text-foreground-subtle"
-                  />
-                </>
-              )}
-            </button>
-          </TooltipTrigger>
-          {collapsed && (
-            <TooltipContent side="right">{mockUser.workspace}</TooltipContent>
-          )}
-        </Tooltip>
+        <DropdownMenu>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <DropdownMenuTrigger asChild>
+                <button
+                  className={cn(
+                    "w-full flex items-center gap-2 rounded-md px-2 py-2 text-sm text-foreground-muted hover:bg-background-hover hover:text-foreground transition-colors outline-none",
+                    collapsed && "justify-center",
+                  )}
+                >
+                  <div className="h-5 w-5 rounded bg-gradient-to-br from-accent to-secondary shrink-0" />
+                  {!collapsed && (
+                    <>
+                      <span className="flex-1 text-left font-medium text-foreground text-xs truncate">
+                        {workspaceGeneral?.name || "Personal Workspace"}
+                      </span>
+                      <ChevronsUpDown
+                        size={13}
+                        className="text-foreground-subtle shrink-0"
+                      />
+                    </>
+                  )}
+                </button>
+              </DropdownMenuTrigger>
+            </TooltipTrigger>
+            {collapsed && (
+              <TooltipContent side="right">{workspaceGeneral?.name || "Personal Workspace"}</TooltipContent>
+            )}
+          </Tooltip>
+          <DropdownMenuContent side="right" align="start" className="w-52 mb-1">
+            <div className="px-2 py-1.5 mb-1">
+              <div className="text-xs font-semibold text-foreground">
+                Workspaces
+              </div>
+            </div>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="gap-2 cursor-pointer font-medium bg-accent/10 text-accent">
+              <div className="h-4 w-4 rounded bg-gradient-to-br from-accent to-secondary shrink-0" />
+              {workspaceGeneral?.name || "Personal Workspace"}
+            </DropdownMenuItem>
+            <DropdownMenuItem className="gap-2 cursor-pointer text-foreground-muted" onClick={() => navigate("/workspace/settings")}>
+              <Settings size={14} /> Workspace Settings
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="gap-2 cursor-pointer text-foreground-muted" onClick={() => {}}>
+              <Plus size={14} /> Create new workspace
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
 
         {/* Settings */}
         <Tooltip>
@@ -211,8 +240,8 @@ const Sidebar = ({ collapsed, onToggle }) => {
               )}
             >
               <UserAvatar
-                name={mockUser.name}
-                image={mockUser.avatar}
+                name={profile?.displayName || "User"}
+                image={profile?.avatar}
                 size="sm"
                 presence="online"
               />
@@ -220,10 +249,10 @@ const Sidebar = ({ collapsed, onToggle }) => {
                 <>
                   <div className="flex-1 text-left min-w-0">
                     <div className="text-xs font-medium text-foreground truncate">
-                      {mockUser.name}
+                      {profile?.displayName || "User"}
                     </div>
                     <div className="text-[10px] text-foreground-subtle truncate">
-                      {mockUser.email}
+                      {account?.email || ""}
                     </div>
                   </div>
                   <ChevronDown
@@ -237,10 +266,10 @@ const Sidebar = ({ collapsed, onToggle }) => {
           <DropdownMenuContent side="top" align="start" className="w-52 mb-1">
             <div className="px-2 py-1.5 mb-1">
               <div className="text-xs font-semibold text-foreground">
-                {mockUser.name}
+                {profile?.displayName || "User"}
               </div>
               <div className="text-[11px] text-foreground-muted">
-                {mockUser.email}
+                {account?.email || ""}
               </div>
             </div>
             <DropdownMenuSeparator />
@@ -281,6 +310,9 @@ const Sidebar = ({ collapsed, onToggle }) => {
 
 const Topbar = ({ breadcrumbs = [] }) => {
   const navigate = useNavigate();
+  const profile = useSettingsStore(state => state.profile);
+  const account = useSettingsStore(state => state.account);
+  
   return (
     <header className="h-14 flex items-center justify-between px-4 border-b border-border bg-background-elevated/60 backdrop-blur-sm shrink-0">
       {/* Left: breadcrumbs */}
@@ -350,8 +382,8 @@ const Topbar = ({ breadcrumbs = [] }) => {
             <DropdownMenuTrigger asChild>
               <button className="rounded-full ring-2 ring-transparent hover:ring-border transition-all">
                 <UserAvatar
-                  name={mockUser.name}
-                  image={mockUser.avatar}
+                  name={profile?.displayName || "User"}
+                  image={profile?.avatar}
                   size="sm"
                   presence="online"
                 />
@@ -360,10 +392,10 @@ const Topbar = ({ breadcrumbs = [] }) => {
             <DropdownMenuContent align="end" className="w-52">
               <div className="px-2 py-1.5 mb-1">
                 <div className="text-xs font-semibold text-foreground">
-                  {mockUser.name}
+                  {profile?.displayName || "User"}
                 </div>
                 <div className="text-[11px] text-foreground-muted">
-                  {mockUser.email}
+                  {account?.email || ""}
                 </div>
               </div>
               <DropdownMenuSeparator />
@@ -392,7 +424,7 @@ const Topbar = ({ breadcrumbs = [] }) => {
 // AppShell
 // ─────────────────────────────────────────────
 
-export const AppShell = ({ breadcrumbs }) => {
+export const AppShell = ({ breadcrumbs, children, mainClassName }) => {
   const [collapsed, setCollapsed] = useState(false);
 
   return (
@@ -406,8 +438,8 @@ export const AppShell = ({ breadcrumbs }) => {
         <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
           <Topbar breadcrumbs={breadcrumbs} />
 
-          <main className="flex-1 overflow-y-auto p-6">
-            <Outlet />
+          <main className={cn("flex-1 overflow-y-auto flex flex-col", mainClassName !== undefined ? mainClassName : "p-6")}>
+            {children || <Outlet />}
           </main>
         </div>
       </div>
