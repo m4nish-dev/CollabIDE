@@ -19,7 +19,8 @@ import {
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSettingsStore } from "@/store/useSettingsStore";
 
-import { PROJECTS } from "@/lib/mockData";
+import { api } from "@/lib/api";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ProjectCard } from "@/components/dashboard/ProjectCard";
 import { QuickActions } from "@/components/dashboard/QuickActions";
 import { StatsStrip } from "@/components/dashboard/StatsStrip";
@@ -40,7 +41,8 @@ import { cn } from "@/lib/utils";
 export default function Dashboard({ defaultTab = "all" }) {
   const navigate = useNavigate();
   const profile = useSettingsStore(state => state.profile);
-  const [projectsList] = useState(PROJECTS);
+  const [projectsList, setProjectsList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTab, setSelectedTab] = useState(null);
   const activeTab = selectedTab ?? defaultTab;
@@ -49,6 +51,27 @@ export default function Dashboard({ defaultTab = "all" }) {
   useEffect(() => {
     setSelectedTab(null);
   }, [defaultTab]);
+
+  useEffect(() => {
+    let mounted = true;
+    setIsLoading(true);
+    api.projects.list({ scope: activeTab })
+      .then((res) => {
+        if (mounted) {
+          setProjectsList(res);
+          setIsLoading(false);
+        }
+      })
+      .catch((err) => {
+        if (mounted) {
+          console.error("Failed to load projects", err);
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      mounted = false;
+    };
+  }, [activeTab]);
 
   const [selectedLanguage, setSelectedLanguage] = useState("All");
   const [sortOption, setSortOption] = useState("modified");
@@ -403,7 +426,20 @@ export default function Dashboard({ defaultTab = "all" }) {
           </div>
 
           {/* Projects Display: Grid or List */}
-          {filteredProjects.length > 0 ? (
+          {isLoading ? (
+            <div className={cn(
+              viewMode === "grid" 
+                ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-1" 
+                : "flex flex-col gap-2 pt-1"
+            )}>
+              {[1, 2, 3, 4, 5, 6].map((n) => (
+                <Skeleton 
+                  key={n} 
+                  className={viewMode === "grid" ? "h-40 w-full rounded-xl bg-background-elevated" : "h-16 w-full rounded-xl bg-background-elevated"} 
+                />
+              ))}
+            </div>
+          ) : filteredProjects.length > 0 ? (
             viewMode === "grid" ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-1">
                 {filteredProjects.map((project, idx) => (
@@ -444,7 +480,7 @@ export default function Dashboard({ defaultTab = "all" }) {
           )}
 
           {/* Full zero projects empty state (if all projects were 0) */}
-          {projectsList.length === 0 && (
+          {!isLoading && projectsList.length === 0 && (
             <EmptyState 
               icon={<FolderPlus size={28} className="text-accent" />}
               title="No projects yet"

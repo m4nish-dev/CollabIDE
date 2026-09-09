@@ -7,6 +7,8 @@ import { Eye, EyeOff } from "lucide-react";
 import { motion } from "framer-motion";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useEffect } from "react";
+import { toast } from "sonner";
+import { api } from "@/lib/api";
 
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import {
@@ -43,6 +45,7 @@ const Login = () => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
@@ -50,20 +53,23 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 800));
-    
-    const mockUser = {
-      id: "user-" + Date.now(),
-      name: data.email.split("@")[0],
-      email: data.email,
-      avatar: `https://i.pravatar.cc/150?u=${data.email}`
-    };
-    const mockToken = "mock-jwt-" + Date.now();
-    login(mockUser, mockToken);
-    
-    setLoading(false);
-    const from = location.state?.from || "/dashboard";
-    navigate(from, { replace: true });
+    try {
+      const { user, token } = await api.auth.login({
+        email: data.email,
+        password: data.password,
+      });
+      
+      login(user, token);
+      
+      const from = location.state?.from || "/dashboard";
+      navigate(from, { replace: true });
+    } catch (error) {
+      toast.error(error.message || "Failed to sign in");
+      setError("root", { message: error.message });
+      onError();
+    } finally {
+      setLoading(false);
+    }
   };
 
   const onError = () => setShakeKey((k) => k + 1);
