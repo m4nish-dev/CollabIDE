@@ -219,7 +219,7 @@ export const RightPanel = () => {
               </div>
 
               {/* Preview Window Canvas */}
-              <div className="flex-1 overflow-auto p-3 flex items-start justify-center bg-[#070709]">
+              <div className="flex-1 overflow-auto p-3 flex items-start justify-center bg-background">
                 <div
                   className={`bg-background-elevated border border-border rounded-xl shadow-2xl transition-all duration-300 overflow-hidden flex flex-col ${
                     deviceMode === "desktop"

@@ -184,7 +184,7 @@ export const AuthVisual = () => {
   }, []);
 
   return (
-    <div className="relative flex h-full w-full items-center justify-center overflow-hidden bg-[#0D0B1A]">
+    <div className="dark relative flex h-full w-full items-center justify-center overflow-hidden bg-[#0D0B1A]">
       {/* Ambient gradient blobs */}
       <Blob
         color="#7C5CFF"

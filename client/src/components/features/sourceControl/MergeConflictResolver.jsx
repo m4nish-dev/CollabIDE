@@ -7,7 +7,7 @@ export const MergeConflictResolver = ({ file, onResolve }) => {
   if (!file) return null;
 
   return (
-    <div className="flex flex-col h-full w-full bg-[#0E0E12] font-mono text-sm relative">
+    <div className="flex flex-col h-full w-full bg-background-elevated font-mono text-sm relative">
       {/* Banner */}
       <div className="h-10 bg-amber-500/10 border-b border-amber-500/30 flex items-center justify-between px-4 shrink-0">
         <div className="flex items-center gap-2 text-amber-500">

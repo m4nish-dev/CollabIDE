@@ -254,7 +254,7 @@ const CreateProjectModalContent = ({
                   <div>
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-background-elevated border border-border text-foreground group-hover:scale-105 transition-transform">
-                        <LayoutGrid size={20} className="text-[#22D3EE]" />
+                        <LayoutGrid size={20} className="text-secondary" />
                       </div>
                       {source === "template" && (
                         <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent text-white">

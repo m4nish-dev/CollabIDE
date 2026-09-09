@@ -136,7 +136,7 @@ export default function IDEWorkspace() {
   );
 
   return (
-    <div className="h-screen w-screen bg-[#0A0A0B] text-foreground flex flex-col overflow-hidden select-none font-sans">
+    <div className="h-screen w-screen bg-background text-foreground flex flex-col overflow-hidden select-none font-sans">
       {/* Top Bar (44px) */}
       <IDETopBar />
 

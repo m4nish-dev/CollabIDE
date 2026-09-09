@@ -15,7 +15,7 @@ export const DiffViewer = ({ file, originalContent, modifiedContent, onClose }) 
   if (!file) return null;
 
   return (
-    <div className="flex flex-col h-full w-full bg-[#0E0E12]">
+    <div className="flex flex-col h-full w-full bg-background-elevated">
       {/* Diff Header */}
       <div className="h-[40px] px-4 border-b border-border bg-background-elevated flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">

@@ -19,7 +19,7 @@ export const QuickActions = ({
       color: "#7C5CFF",
       bg: "rgba(124, 92, 255, 0.12)",
       borderHover:
-        "hover:border-[#7C5CFF]/60 hover:shadow-[0_0_24px_rgba(124,92,255,0.18)]",
+        "hover:border-accent/60 hover:shadow-[0_0_24px_var(--accent-glow)]",
       onClick: onNewProject,
     },
     {
@@ -30,7 +30,7 @@ export const QuickActions = ({
       color: "#22D3EE",
       bg: "rgba(34, 211, 238, 0.12)",
       borderHover:
-        "hover:border-[#22D3EE]/60 hover:shadow-[0_0_24px_rgba(34,211,238,0.18)]",
+        "hover:border-secondary/60 hover:shadow-[0_0_24px_rgba(34,211,238,0.18)]",
       onClick: onImportGithub,
     },
     {
@@ -41,7 +41,7 @@ export const QuickActions = ({
       color: "#EC4899",
       bg: "rgba(236, 72, 153, 0.12)",
       borderHover:
-        "hover:border-[#EC4899]/60 hover:shadow-[0_0_24px_rgba(236,72,153,0.18)]",
+        "hover:border-pink-500/60 hover:shadow-[0_0_24px_rgba(236,72,153,0.18)]",
       onClick: onBrowseTemplates,
     },
     {
@@ -52,7 +52,7 @@ export const QuickActions = ({
       color: "#10B981",
       bg: "rgba(16, 185, 129, 0.12)",
       borderHover:
-        "hover:border-[#10B981]/60 hover:shadow-[0_0_24px_rgba(16,185,129,0.18)]",
+        "hover:border-success/60 hover:shadow-[0_0_24px_rgba(16,185,129,0.18)]",
       onClick: onInviteTeammates,
     },
   ];
