@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { motion } from "framer-motion";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useEffect } from "react";
 
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import {
@@ -25,9 +27,18 @@ const schema = z.object({
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [shakeKey, setShakeKey] = useState(0);
+
+  const { isAuthenticated, login } = useAuthStore();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   const {
     register,
@@ -37,11 +48,22 @@ const Login = () => {
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = async (_data) => {
+  const onSubmit = async (data) => {
     setLoading(true);
     await new Promise((r) => setTimeout(r, 800));
+    
+    const mockUser = {
+      id: "user-" + Date.now(),
+      name: data.email.split("@")[0],
+      email: data.email,
+      avatar: `https://i.pravatar.cc/150?u=${data.email}`
+    };
+    const mockToken = "mock-jwt-" + Date.now();
+    login(mockUser, mockToken);
+    
     setLoading(false);
-    navigate("/dashboard");
+    const from = location.state?.from || "/dashboard";
+    navigate(from, { replace: true });
   };
 
   const onError = () => setShakeKey((k) => k + 1);

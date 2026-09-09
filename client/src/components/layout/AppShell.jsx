@@ -39,6 +39,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useSettingsStore } from "@/store/useSettingsStore";
+import { useAuthStore } from "@/store/useAuthStore";
 
 // ─────────────────────────────────────────────
 // Nav config
@@ -121,8 +122,7 @@ const SidebarNavItem = ({ item, collapsed }) => {
 
 const Sidebar = ({ collapsed, onToggle }) => {
   const navigate = useNavigate();
-  const profile = useSettingsStore(state => state.profile);
-  const account = useSettingsStore(state => state.account);
+  const { user, logout } = useAuthStore();
   const workspaceGeneral = useSettingsStore(state => state.workspaceGeneral);
   
   return (
@@ -239,8 +239,8 @@ const Sidebar = ({ collapsed, onToggle }) => {
               )}
             >
               <UserAvatar
-                name={profile?.displayName || "User"}
-                image={profile?.avatar}
+                name={user?.name || "User"}
+                image={user?.avatar}
                 size="sm"
                 presence="online"
               />
@@ -248,10 +248,10 @@ const Sidebar = ({ collapsed, onToggle }) => {
                 <>
                   <div className="flex-1 text-left min-w-0">
                     <div className="text-xs font-medium text-foreground truncate">
-                      {profile?.displayName || "User"}
+                      {user?.name || "User"}
                     </div>
                     <div className="text-[10px] text-foreground-subtle truncate">
-                      {account?.email || ""}
+                      {user?.email || ""}
                     </div>
                   </div>
                   <ChevronDown
@@ -265,10 +265,10 @@ const Sidebar = ({ collapsed, onToggle }) => {
           <DropdownMenuContent side="top" align="start" className="w-52 mb-1">
             <div className="px-2 py-1.5 mb-1">
               <div className="text-xs font-semibold text-foreground">
-                {profile?.displayName || "User"}
+                {user?.name || "User"}
               </div>
               <div className="text-[11px] text-foreground-muted">
-                {account?.email || ""}
+                {user?.email || ""}
               </div>
             </div>
             <DropdownMenuSeparator />
@@ -281,7 +281,10 @@ const Sidebar = ({ collapsed, onToggle }) => {
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="gap-2 cursor-pointer text-danger focus:text-danger focus:bg-danger/10"
-              onClick={() => navigate("/login")}
+              onClick={() => {
+                logout();
+                navigate("/login");
+              }}
             >
               <LogOut size={14} /> Log out
             </DropdownMenuItem>

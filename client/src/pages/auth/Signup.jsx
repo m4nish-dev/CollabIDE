@@ -5,6 +5,8 @@ import { z } from "zod";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import { motion } from "framer-motion";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useEffect } from "react";
 
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import {
@@ -33,6 +35,14 @@ const Signup = () => {
   const [shakeKey, setShakeKey] = useState(0);
   const [watchedPassword, setWatchedPassword] = useState("");
 
+  const { isAuthenticated, login } = useAuthStore();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
+
   const {
     register,
     handleSubmit,
@@ -41,9 +51,19 @@ const Signup = () => {
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = async (_data) => {
+  const onSubmit = async (data) => {
     setLoading(true);
     await new Promise((r) => setTimeout(r, 800));
+    
+    const mockUser = {
+      id: "user-" + Date.now(),
+      name: data.fullName || data.email.split("@")[0],
+      email: data.email,
+      avatar: `https://i.pravatar.cc/150?u=${data.email}`
+    };
+    const mockToken = "mock-jwt-" + Date.now();
+    login(mockUser, mockToken);
+    
     setLoading(false);
     navigate("/onboarding");
   };

@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { SettingsLayout } from "@/components/layout/SettingsLayout";
 import { useSettingsStore } from "@/store/useSettingsStore";
+import { useAuthStore } from "@/store/useAuthStore";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Camera, Globe, MapPin, User, AtSign, Clock } from "lucide-react";
 
 export const ProfileSettings = () => {
   const { profile, updateProfile } = useSettingsStore();
+  const { updateUser } = useAuthStore();
   const [localProfile, setLocalProfile] = useState(profile);
   const [isCheckingUsername, setIsCheckingUsername] = useState(false);
   const [usernameStatus, setUsernameStatus] = useState(null); // 'available' | 'taken' | null
@@ -18,6 +20,8 @@ export const ProfileSettings = () => {
     // Auto-save debounced would be ideal, but for mock purposes we save directly on change
     if (name !== 'username') {
       updateProfile({ [name]: value });
+      if (name === 'displayName') updateUser({ name: value });
+      if (name === 'avatar') updateUser({ avatar: value });
     }
   };
 

@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "@/components/ui/toast";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 import { AppShell } from "@/components/layout/AppShell";
+import { ProtectedRoute } from "@/components/shared/ProtectedRoute";
 
 // ── Auth pages ────────────────────────────────────────────────
 import Login from "@/pages/auth/Login";
@@ -81,7 +82,7 @@ const AppRoutes = () => {
           <Route path="/forgot-password" element={<PageTransition><ForgotPassword /></PageTransition>} />
           <Route path="/reset-password" element={<PageTransition><ResetPassword /></PageTransition>} />
           <Route path="/verify-email" element={<PageTransition><VerifyEmail /></PageTransition>} />
-          <Route path="/onboarding" element={<PageTransition><Onboarding /></PageTransition>} />
+          <Route path="/onboarding" element={<PageTransition><ProtectedRoute><Onboarding /></ProtectedRoute></PageTransition>} />
           <Route path="/invite/:token" element={<PageTransition><InviteAcceptPage /></PageTransition>} />
           <Route path="/404" element={<PageTransition><NotFound /></PageTransition>} />
           <Route path="/403" element={<PageTransition><Forbidden /></PageTransition>} />
@@ -89,10 +90,10 @@ const AppRoutes = () => {
           <Route path="/project-not-found" element={<PageTransition><ProjectNotFound /></PageTransition>} />
 
           {/* Full-viewport Core IDE workspace */}
-          <Route path="/project/:id" element={<PageTransition><IDEWorkspace /></PageTransition>} />
+          <Route path="/project/:id" element={<PageTransition><ProtectedRoute><IDEWorkspace /></ProtectedRoute></PageTransition>} />
 
           {/* Direct top-level pages (wrapped in AppShell via Outlet) */}
-          <Route element={<AppShell />}>
+          <Route element={<ProtectedRoute><AppShell /></ProtectedRoute>}>
             <Route path="/dashboard" element={<PageTransition><Dashboard defaultTab="all" /></PageTransition>} />
             <Route path="/projects" element={<PageTransition><Dashboard defaultTab="all" /></PageTransition>} />
             <Route path="/shared" element={<PageTransition><Dashboard defaultTab="shared" /></PageTransition>} />
