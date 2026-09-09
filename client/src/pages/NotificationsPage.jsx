@@ -8,7 +8,6 @@ import {
   Shield, 
   Zap,
   Check,
-  MailOpen
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/shared/EmptyState";

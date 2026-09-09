@@ -38,7 +38,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { mockUser } from "@/lib/mockUser";
 import { useSettingsStore } from "@/store/useSettingsStore";
 
 // ─────────────────────────────────────────────

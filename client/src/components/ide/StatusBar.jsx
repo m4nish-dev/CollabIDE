@@ -19,11 +19,8 @@ export const StatusBar = () => {
     currentBranch,
     problems,
     cursorPosition,
-    collaborators,
     activeFileId,
     setActiveBottomTab,
-    setActiveRightTab,
-    toggleRightPanel,
   } = useProjectStore();
 
   const errorCount = problems.filter((p) => p.severity === "error").length;

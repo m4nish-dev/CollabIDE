@@ -52,6 +52,23 @@ export default function Showcase() {
       </section>
 
       <section className="space-y-4">
+        <h2 className="text-xl font-semibold">Modal Demo</h2>
+        <div className="flex items-center gap-4">
+          <Button variant="primary" onClick={() => setModalOpen(true)}>Open Modal</Button>
+          <span className="text-sm text-foreground-muted">State: {modalOpen ? "open" : "closed"}</span>
+        </div>
+        {modalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+            <div className="bg-background-elevated border border-border rounded-2xl p-8 max-w-sm w-full shadow-2xl space-y-4">
+              <h3 className="text-lg font-semibold text-foreground">Demo Modal</h3>
+              <p className="text-sm text-foreground-muted">This modal is wired up for the component showcase.</p>
+              <Button variant="outline" onClick={() => setModalOpen(false)}>Close</Button>
+            </div>
+          </div>
+        )}
+      </section>
+
+      <section className="space-y-4">
         <h2 className="text-xl font-semibold">Skeletons</h2>
         <div className="space-y-4 max-w-md">
           <div className="flex items-center space-x-4">

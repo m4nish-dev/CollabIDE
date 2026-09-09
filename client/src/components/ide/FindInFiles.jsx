@@ -11,7 +11,6 @@ import {
   MoreVertical,
   ListTree,
   FileCode,
-  X
 } from "lucide-react";
 import { useProjectStore } from "@/store/useProjectStore";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -58,7 +57,7 @@ export const FindInFiles = () => {
     });
   };
 
-  const handleMatchClick = (file, line) => {
+  const handleMatchClick = (file, _line) => {
     setActiveFile(file);
     // In a real implementation, we would scroll to the line in Monaco editor
   };

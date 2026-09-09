@@ -33,7 +33,13 @@ export default [
       'react/no-unescaped-entities': 'off',
       'react-hooks/purity': 'off',
       'react-hooks/set-state-in-effect': 'off',
-      'no-unused-vars': 'warn',
+      'no-unused-vars': ['warn', { 
+        vars: 'all', 
+        args: 'after-used', 
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_',
+      }],
     },
     settings: {
       react: {

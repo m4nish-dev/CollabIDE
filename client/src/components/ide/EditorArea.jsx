@@ -15,7 +15,6 @@ import { useProjectStore } from "@/store/useProjectStore";
 import { useCollaborationStore } from "@/store/useCollaborationStore";
 import { RemoteCursor } from "@/components/features/collaboration/RemoteCursor";
 import { RemoteSelection } from "@/components/features/collaboration/RemoteSelection";
-import MonacoEditor from "@monaco-editor/react";
 import { COLLAB_IDE_THEME, COLLAB_LIGHT_THEME } from "@/lib/monacoTheme";
 import { useSettingsStore } from "@/store/useSettingsStore";
 import {
@@ -65,18 +64,12 @@ function findNodeByPath(nodes, path) {
 export const EditorArea = () => {
   const {
     activeFileId,
-    activeSecondaryFileId,
-    openFiles,
     setActiveFile,
-    closeFile,
     closeTab,
-    fileSystem,
     files,
     openTabIds,
     unsavedFileIds,
-    splitMode,
     splitEditor,
-    setSplitMode,
     toggleSplitEditor,
     setCursorPosition,
     updateFileContent,

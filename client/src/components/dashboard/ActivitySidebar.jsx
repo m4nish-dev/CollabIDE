@@ -12,7 +12,6 @@ import {
   PlayCircle,
   FileCode,
 } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
 
 import { COLLABORATORS, ACTIVITIES } from "@/lib/mockData";
 import { cn } from "@/lib/utils";

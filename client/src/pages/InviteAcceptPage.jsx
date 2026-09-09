@@ -19,6 +19,7 @@ export default function InviteAcceptPage() {
     inviterName: "Priya Sharma",
     inviterAvatar: "https://i.pravatar.cc/150?u=priya",
     role: "Editor",
+    tokenRef: token ? token.slice(0, 8).toUpperCase() : "XXXXXXXX",
   };
 
   const handleAccept = () => {

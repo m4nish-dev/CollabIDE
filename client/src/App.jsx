@@ -13,7 +13,6 @@ import Onboarding from "@/pages/onboarding/Onboarding";
 import Dashboard from "@/pages/Dashboard";
 import Templates from "@/pages/Templates";
 import InviteAcceptPage from "@/pages/InviteAcceptPage";
-import { PermissionsTable } from "@/components/features/sharing/PermissionsTable";
 
 import IDEWorkspace from "@/pages/IDEWorkspace";
 import { NotificationsPage } from "@/pages/NotificationsPage";

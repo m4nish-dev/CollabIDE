@@ -20,7 +20,6 @@ import {
 } from "lucide-react";
 import { DndContext, useDraggable, useDroppable } from "@dnd-kit/core";
 import { useProjectStore } from "@/store/useProjectStore";
-import { PresenceIndicator } from "@/components/features/collaboration/PresenceIndicator";
 import { EmptyState } from "@/components/shared/EmptyState";
 import {
   ContextMenu,

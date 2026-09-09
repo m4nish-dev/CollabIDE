@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { SettingsLayout } from "@/components/layout/SettingsLayout";
 import { useSettingsStore } from "@/store/useSettingsStore";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
 import { 
   Dialog,
   DialogContent,
@@ -10,7 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { ShieldCheck, Key, Laptop, Smartphone, Globe, Copy, RefreshCw, Check } from "lucide-react";
+import { ShieldCheck, Laptop, Smartphone, Globe, Copy, RefreshCw, Check } from "lucide-react";
 import { toast } from "@/lib/toast";
 
 export const SecuritySettings = () => {

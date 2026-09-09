@@ -2,11 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowLeft,
-  Check,
-  ChevronDown,
   ChevronRight,
   Folder,
-  GitBranch,
   Play,
   Settings,
   Share2,
@@ -14,14 +11,6 @@ import {
   UserPlus,
 } from "lucide-react";
 import { useProjectStore } from "@/store/useProjectStore";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   Tooltip,
   TooltipContent,
@@ -37,9 +26,6 @@ export const IDETopBar = () => {
   const {
     projectName,
     setProjectName,
-    currentBranch,
-    branches,
-    setCurrentBranch,
     activeFileId,
     isRunning,
     toggleRun,

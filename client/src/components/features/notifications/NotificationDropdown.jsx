@@ -7,8 +7,6 @@ import {
   AlertCircle, 
   Shield, 
   Zap,
-  Check as CheckIcon,
-  X
 } from "lucide-react";
 import { useSettingsStore } from "@/store/useSettingsStore";
 import {
