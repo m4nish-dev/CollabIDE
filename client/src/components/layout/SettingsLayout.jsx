@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { AppShell } from "@/components/layout/AppShell";
 import { useSettingsStore } from "@/store/useSettingsStore";
 import { CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -48,8 +47,7 @@ export const SettingsLayout = ({ children, title, description }) => {
   }, [isSaving]);
 
   return (
-    <AppShell mainClassName="p-0">
-      <div className="flex flex-1 bg-background relative">
+      <div className="flex flex-1 bg-background relative w-full h-full">
         {/* Left Nav */}
         <div className="w-64 border-r border-border bg-background-elevated overflow-y-auto hidden md:block shrink-0">
           <div className="p-6">
@@ -159,6 +157,5 @@ export const SettingsLayout = ({ children, title, description }) => {
           </div>
         </div>
       </div>
-    </AppShell>
   );
 };

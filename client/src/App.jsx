@@ -91,33 +91,7 @@ const AppRoutes = () => {
           {/* Full-viewport Core IDE workspace */}
           <Route path="/project/:id" element={<PageTransition><IDEWorkspace /></PageTransition>} />
 
-          {/* Direct top-level pages (wrapped in AppShell inside their own files, but let's animate them here) */}
-          <Route path="/notifications" element={<PageTransition><NotificationsPage /></PageTransition>} />
-          <Route path="/activity" element={<PageTransition><ActivityPage /></PageTransition>} />
-
-          {/* User Settings */}
-          <Route path="/settings" element={<Navigate to="/settings/profile" replace />} />
-          <Route path="/settings/profile" element={<PageTransition><ProfileSettings /></PageTransition>} />
-          <Route path="/settings/account" element={<PageTransition><AccountSettings /></PageTransition>} />
-          <Route path="/settings/appearance" element={<PageTransition><AppearanceSettings /></PageTransition>} />
-          <Route path="/settings/editor" element={<PageTransition><EditorSettings /></PageTransition>} />
-          <Route path="/settings/keyboard" element={<PageTransition><KeyboardSettings /></PageTransition>} />
-          <Route path="/settings/notifications" element={<PageTransition><NotificationSettings /></PageTransition>} />
-          <Route path="/settings/security" element={<PageTransition><SecuritySettings /></PageTransition>} />
-          <Route path="/settings/connections" element={<PageTransition><ConnectedAccountsSettings /></PageTransition>} />
-          <Route path="/settings/sessions" element={<PageTransition><SessionsSettings /></PageTransition>} />
-
-          {/* Workspace Settings */}
-          <Route path="/workspace/settings" element={<Navigate to="/workspace/settings/general" replace />} />
-          <Route path="/workspace/settings/general" element={<PageTransition><WorkspaceGeneralSettings /></PageTransition>} />
-          <Route path="/workspace/settings/members" element={<PageTransition><WorkspaceMembersSettings /></PageTransition>} />
-          <Route path="/workspace/settings/danger" element={<PageTransition><WorkspaceDangerSettings /></PageTransition>} />
-
-          {/* Dev-only Component Showcase */}
-          {import.meta.env.DEV && (
-            <Route path="/_showcase" element={<PageTransition><Showcase /></PageTransition>} />
-          )}
-          
+          {/* Direct top-level pages (wrapped in AppShell via Outlet) */}
           <Route element={<AppShell />}>
             <Route path="/dashboard" element={<PageTransition><Dashboard defaultTab="all" /></PageTransition>} />
             <Route path="/projects" element={<PageTransition><Dashboard defaultTab="all" /></PageTransition>} />
@@ -125,7 +99,33 @@ const AppRoutes = () => {
             <Route path="/starred" element={<PageTransition><Dashboard defaultTab="starred" /></PageTransition>} />
             <Route path="/templates" element={<PageTransition><Templates /></PageTransition>} />
             <Route path="/workspace/:id" element={<PageTransition><WorkspacePage /></PageTransition>} />
+
+            <Route path="/notifications" element={<PageTransition><NotificationsPage /></PageTransition>} />
+            <Route path="/activity" element={<PageTransition><ActivityPage /></PageTransition>} />
+
+            {/* User Settings */}
+            <Route path="/settings" element={<Navigate to="/settings/profile" replace />} />
+            <Route path="/settings/profile" element={<PageTransition><ProfileSettings /></PageTransition>} />
+            <Route path="/settings/account" element={<PageTransition><AccountSettings /></PageTransition>} />
+            <Route path="/settings/appearance" element={<PageTransition><AppearanceSettings /></PageTransition>} />
+            <Route path="/settings/editor" element={<PageTransition><EditorSettings /></PageTransition>} />
+            <Route path="/settings/keyboard" element={<PageTransition><KeyboardSettings /></PageTransition>} />
+            <Route path="/settings/notifications" element={<PageTransition><NotificationSettings /></PageTransition>} />
+            <Route path="/settings/security" element={<PageTransition><SecuritySettings /></PageTransition>} />
+            <Route path="/settings/connections" element={<PageTransition><ConnectedAccountsSettings /></PageTransition>} />
+            <Route path="/settings/sessions" element={<PageTransition><SessionsSettings /></PageTransition>} />
+
+            {/* Workspace Settings */}
+            <Route path="/workspace/settings" element={<Navigate to="/workspace/settings/general" replace />} />
+            <Route path="/workspace/settings/general" element={<PageTransition><WorkspaceGeneralSettings /></PageTransition>} />
+            <Route path="/workspace/settings/members" element={<PageTransition><WorkspaceMembersSettings /></PageTransition>} />
+            <Route path="/workspace/settings/danger" element={<PageTransition><WorkspaceDangerSettings /></PageTransition>} />
           </Route>
+
+          {/* Dev-only Component Showcase */}
+          {import.meta.env.DEV && (
+            <Route path="/_showcase" element={<PageTransition><Showcase /></PageTransition>} />
+          )}
 
           {/* Redirects */}
           <Route path="/" element={<Navigate to="/login" replace />} />

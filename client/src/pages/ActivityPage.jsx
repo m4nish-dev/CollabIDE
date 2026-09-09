@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import { AppShell } from "@/components/layout/AppShell";
 import { MOCK_ACTIVITIES } from "@/lib/mockData";
 import { 
   GitBranch, 
@@ -97,7 +96,6 @@ export const ActivityPage = () => {
   }, [isLoading]);
 
   return (
-    <AppShell>
       <div className="flex flex-col h-full bg-background max-w-5xl mx-auto w-full">
         {/* Header & Filters */}
         <div className="p-6 md:p-8 border-b border-border sticky top-0 bg-background/95 backdrop-blur z-10">
@@ -181,6 +179,5 @@ export const ActivityPage = () => {
           </div>
         </div>
       </div>
-    </AppShell>
   );
 };

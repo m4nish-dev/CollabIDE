@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { AppShell } from "@/components/layout/AppShell";
 import { useSettingsStore } from "@/store/useSettingsStore";
 import { 
   Bell, 
@@ -68,7 +67,6 @@ export const NotificationsPage = () => {
   };
 
   return (
-    <AppShell>
       <div className="flex h-full bg-background">
         {/* Sidebar */}
         <div className="w-64 border-r border-border bg-background-elevated p-6 flex flex-col hidden md:flex shrink-0">
@@ -174,6 +172,5 @@ export const NotificationsPage = () => {
           </div>
         </div>
       </div>
-    </AppShell>
   );
 };
