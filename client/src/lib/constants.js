@@ -67,7 +67,6 @@ export const ROLES = {
 
 export const LANGUAGES = {
   javascript: { name: 'JavaScript', ext: '.js', id: 'javascript', color: 'text-yellow-400' },
-  typescript: { name: 'TypeScript', ext: '.ts', id: 'typescript', color: 'text-blue-400' },
   react: { name: 'React', ext: '.jsx', id: 'javascript', color: 'text-cyan-400' },
   python: { name: 'Python', ext: '.py', id: 'python', color: 'text-blue-500' },
   html: { name: 'HTML', ext: '.html', id: 'html', color: 'text-orange-500' },
