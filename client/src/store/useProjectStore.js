@@ -20,15 +20,9 @@ const SEED_PROJECT_FILES = [
             path: "src/components/Header.jsx",
             type: "file",
             language: "javascript",
-            content: `import React from 'react'
-import { Bell, Search, Sparkles, User } from 'lucide-react'
+            content: `import { Bell, Search, User } from 'lucide-react'
 
-interface HeaderProps {
-  workspaceName?: string
-  unreadAlertsCount?: number
-}
-
-export const Header: React.FC<HeaderProps> = ({
+export const Header = ({
   workspaceName = 'Engineering Core',
   unreadAlertsCount = 3,
 }) => {
@@ -56,7 +50,7 @@ export const Header: React.FC<HeaderProps> = ({
           />
         </div>
 
-        <button 
+        <button
           className="relative p-1.5 text-foreground-muted hover:text-foreground rounded-md hover:bg-background-hover transition-colors"
           aria-label="Notifications"
         >
@@ -89,11 +83,11 @@ export const Header: React.FC<HeaderProps> = ({
             path: "src/components/Sidebar.jsx",
             type: "file",
             language: "javascript",
-            content: `import React, { useState } from 'react'
-import { Code2, Files, GitPullRequest, Settings, Terminal } from 'lucide-react'
+            content: `import { useState } from 'react'
+import { Code2, Settings } from 'lucide-react'
 
-export const Sidebar: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'files' | 'git' | 'term'>('files')
+export const Sidebar = () => {
+  const [activeTab, setActiveTab] = useState('files')
 
   return (
     <aside className="w-64 border-r border-border bg-background-elevated flex flex-col h-full select-none">
@@ -114,7 +108,7 @@ export const Sidebar: React.FC = () => {
         <button className="p-1.5 hover:text-foreground rounded">
           <Settings className="h-4 w-4" />
         </button>
-        <span className="text-[11px] font-mono">UTF-8 • TSX</span>
+        <span className="text-[11px] font-mono">UTF-8 • JSX</span>
       </div>
     </aside>
   )
@@ -127,15 +121,7 @@ export const Sidebar: React.FC = () => {
             path: "src/components/Button.jsx",
             type: "file",
             language: "javascript",
-            content: `import React from 'react'
-
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger'
-  size?: 'sm' | 'md' | 'lg'
-  isLoading?: boolean
-}
-
-export const Button: React.FC<ButtonProps> = ({
+            content: `export const Button = ({
   variant = 'primary',
   size = 'md',
   isLoading = false,
@@ -187,11 +173,10 @@ export const Button: React.FC<ButtonProps> = ({
             path: "src/pages/Home.jsx",
             type: "file",
             language: "javascript",
-            content: `import React from 'react'
-import { Sparkles, ArrowRight, Zap, Users, Shield } from 'lucide-react'
+            content: `import { Sparkles, Zap, Users, Shield } from 'lucide-react'
 import { Button } from '../components/Button'
 
-export const Home: React.FC = () => {
+export const Home = () => {
   return (
     <div className="p-8 max-w-5xl mx-auto space-y-8">
       <div className="space-y-3">
@@ -224,6 +209,10 @@ export const Home: React.FC = () => {
           <p className="text-xs text-foreground-muted">Isolated WebContainers provide full Node.js execution directly in browser tabs.</p>
         </div>
       </div>
+
+      <Button variant="primary" size="lg">
+        Get Started
+      </Button>
     </div>
   )
 }
@@ -235,9 +224,7 @@ export const Home: React.FC = () => {
             path: "src/pages/About.jsx",
             type: "file",
             language: "javascript",
-            content: `import React from 'react'
-
-export const About: React.FC = () => {
+            content: `export const About = () => {
   return (
     <div className="p-8 max-w-3xl mx-auto space-y-6">
       <h2 className="text-2xl font-bold text-foreground">About CollabIDE</h2>
@@ -257,12 +244,12 @@ export const About: React.FC = () => {
         path: "src/App.jsx",
         type: "file",
         language: "javascript",
-        content: `import React, { useState } from 'react'
+        content: `import { useState } from 'react'
 import { Header } from './components/Header'
 import { Home } from './pages/Home'
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'overview' | 'settings'>('overview')
+  const [activeTab, setActiveTab] = useState('overview')
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col antialiased">
@@ -286,7 +273,7 @@ import ReactDOM from 'react-dom/client'
 import App from './App'
 import './index.css'
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,
@@ -350,7 +337,7 @@ body {
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -359,36 +346,12 @@ body {
     "lucide-react": "^1.41.0"
   },
   "devDependencies": {
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^4.3.0",
-    "javascript": "^5.5.0",
-    "vite": "^5.4.0"
+    "vite": "^5.4.0",
+    "tailwindcss": "^3.4.0",
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.4.0"
   }
-}
-`,
-  },
-  {
-    id: "root-tsconfig.json",
-    name: "tsconfig.json",
-    path: "tsconfig.json",
-    type: "file",
-    language: "json",
-    content: `{
-  "compilerOptions": {
-    "target": "ES2022",
-    "useDefineForClassFields": true,
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "skipLibCheck": true,
-    "moduleResolution": "bundler",
-    "isolatedModules": true,
-    "moduleDetection": "force",
-    "noEmit": true,
-    "jsx": "react-jsx",
-    "strict": true
-  },
-  "include": ["src"]
 }
 `,
   },
@@ -425,7 +388,7 @@ A production-ready React 19 + JavaScript template running in real-time within th
 - ⚡ **Instant HMR**: Blazing fast hot module reloading powered by Vite
 - 👥 **Multiplayer**: Live cursor tracking, shared terminal instances, and conflict-free editing
 - 🎨 **Tailwind CSS**: Full tokenized design system ready to use
-- 🛡️ **JavaScript**: Strict type-checking and automated IntelliSense
+- 🔧 **JavaScript**: Clean JSX with no TypeScript overhead
 
 ## Getting Started
 \`\`\`bash
