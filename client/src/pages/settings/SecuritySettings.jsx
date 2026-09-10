@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { SettingsLayout } from "@/components/layout/SettingsLayout";
+import { api } from "@/lib/api";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useSettingsStore } from "@/store/useSettingsStore";
 import { Button } from "@/components/ui/button";
 import { 
@@ -25,18 +27,54 @@ export const SecuritySettings = () => {
     "I5J6-K7L8-M9N0", "O1P2-Q3R4-S5T6"
   ];
 
-  const LOGIN_HISTORY = [
-    { id: 1, device: "MacBook Pro 14\"", browser: "Chrome 120", location: "San Francisco, CA", ip: "192.168.1.1", time: "Active now", current: true },
-    { id: 2, device: "iPhone 13 Pro", browser: "Safari Mobile", location: "San Francisco, CA", ip: "10.0.0.45", time: "2 hours ago", current: false },
-    { id: 3, device: "Windows PC", browser: "Firefox 118", location: "Seattle, WA", ip: "172.16.0.2", time: "Yesterday", current: false },
-  ];
+  const [loginHistory, setLoginHistory] = useState([]);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(true);
+  const [historyError, setHistoryError] = useState(null);
+  const [isEnabling2FA, setIsEnabling2FA] = useState(false);
 
-  const handleEnable2FA = () => {
+  const fetchLoginHistory = () => {
+    let mounted = true;
+    setIsLoadingHistory(true);
+    setHistoryError(null);
+    api.auth.loginHistory()
+      .then((res) => {
+        if (mounted) {
+          setLoginHistory(res);
+          setIsLoadingHistory(false);
+        }
+      })
+      .catch((err) => {
+        if (mounted) {
+          console.error("Failed to load login history", err);
+          setHistoryError(err.message || "Failed to load login history");
+          setIsLoadingHistory(false);
+        }
+      });
+    return () => {
+      mounted = false;
+    };
+  };
+
+  useEffect(() => {
+    return fetchLoginHistory();
+  }, []);
+
+  const handleEnable2FA = async () => {
     if (authCode.length === 6) {
-      updateSecurity({ twoFactorEnabled: true });
-      setIs2FAModalOpen(false);
-      setAuthCode("");
-      toast.success("Two-factor authentication enabled");
+      setIsEnabling2FA(true);
+      api.auth.enable2FA({ code: authCode })
+        .then(() => {
+          updateSecurity({ twoFactorEnabled: true });
+          setIs2FAModalOpen(false);
+          setAuthCode("");
+          toast.success("Two-factor authentication enabled");
+        })
+        .catch((err) => {
+          toast.error(err.message || "Invalid authentication code");
+        })
+        .finally(() => {
+          setIsEnabling2FA(false);
+        });
     } else {
       toast.error("Invalid authentication code");
     }
@@ -157,8 +195,24 @@ export const SecuritySettings = () => {
           </h3>
           <div className="border border-border rounded-lg overflow-hidden bg-background-elevated">
             <div className="divide-y divide-border">
-              {LOGIN_HISTORY.map((session) => (
-                <div key={session.id} className="p-4 flex items-start gap-4">
+              {historyError ? (
+                <div className="flex flex-col items-center justify-center p-8">
+                  <p className="text-red-400 mb-4">{historyError}</p>
+                  <Button variant="secondary" onClick={fetchLoginHistory}>Retry</Button>
+                </div>
+              ) : isLoadingHistory ? (
+                [1, 2, 3].map((n) => (
+                  <div key={n} className="p-4 flex items-start gap-4">
+                    <Skeleton className="h-10 w-10 rounded bg-background shrink-0 border border-border" />
+                    <div className="flex-1 space-y-2">
+                      <Skeleton className="h-4 w-40 bg-background" />
+                      <Skeleton className="h-3 w-60 bg-background" />
+                    </div>
+                  </div>
+                ))
+              ) : (
+                loginHistory.map((session) => (
+                  <div key={session.id} className="p-4 flex items-start gap-4">
                   <div className="p-2 rounded bg-background shrink-0 border border-border">
                     {session.device.includes("iPhone") ? (
                       <Smartphone className="h-5 w-5 text-foreground-muted" />
@@ -187,7 +241,8 @@ export const SecuritySettings = () => {
                     </div>
                   </div>
                 </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
         </div>
@@ -234,10 +289,10 @@ export const SecuritySettings = () => {
               <Button variant="outline" onClick={() => setIs2FAModalOpen(false)}>Cancel</Button>
               <Button 
                 onClick={handleEnable2FA} 
-                disabled={authCode.length !== 6}
+                disabled={authCode.length !== 6 || isEnabling2FA}
                 className="bg-accent text-white hover:bg-accent-hover disabled:opacity-50"
               >
-                Verify & Enable
+                {isEnabling2FA ? "Verifying..." : "Verify & Enable"}
               </Button>
             </div>
           </div>

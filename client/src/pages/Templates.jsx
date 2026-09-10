@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Search,
@@ -10,7 +10,9 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-import { TEMPLATES_DATA } from "@/lib/templatesData";
+import { api } from "@/lib/api";
+import { Skeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/shared/EmptyState";
 import { FrameworkIcon } from "@/components/shared/FrameworkIcon";
 import { CreateProjectModal } from "@/components/features/projects/CreateProjectModal";
 import { Button } from "@/components/ui/button";
@@ -32,18 +34,49 @@ export default function Templates() {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
 
+  const [templatesList, setTemplatesList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchTemplates = () => {
+    let mounted = true;
+    setIsLoading(true);
+    setError(null);
+    api.templates.list()
+      .then((res) => {
+        if (mounted) {
+          setTemplatesList(res);
+          setIsLoading(false);
+        }
+      })
+      .catch((err) => {
+        if (mounted) {
+          console.error("Failed to load templates", err);
+          setError(err.message || "Failed to load templates");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      mounted = false;
+    };
+  };
+
+  useEffect(() => {
+    return fetchTemplates();
+  }, []);
+
   // Category counts
   const categoryCounts = useMemo(() => {
-    const counts = { All: TEMPLATES_DATA.length };
-    TEMPLATES_DATA.forEach((t) => {
+    const counts = { All: templatesList.length };
+    templatesList.forEach((t) => {
       counts[t.category] = (counts[t.category] || 0) + 1;
     });
     return counts;
-  }, []);
+  }, [templatesList]);
 
   // Filtered list
   const filteredTemplates = useMemo(() => {
-    return TEMPLATES_DATA.filter((template) => {
+    return templatesList.filter((template) => {
       // Category filter
       if (activeCategory !== "All" && template.category !== activeCategory) {
         return false;
@@ -62,7 +95,7 @@ export default function Templates() {
 
       return true;
     });
-  }, [activeCategory, searchQuery]);
+  }, [activeCategory, searchQuery, templatesList]);
 
   const handleUseTemplate = (template) => {
     setSelectedTemplate(template);
@@ -92,7 +125,7 @@ export default function Templates() {
           <div className="flex items-center gap-2 text-xs text-foreground-subtle bg-background-elevated/70 border border-border px-3 py-1.5 rounded-lg">
             <LayoutTemplate size={14} className="text-accent" />
             <span className="font-semibold text-foreground">
-              {TEMPLATES_DATA.length}
+              {isLoading ? "..." : templatesList.length}
             </span>{" "}
             templates available
           </div>
@@ -158,7 +191,18 @@ export default function Templates() {
       </div>
 
       {/* ── Grid of Template Cards (3 columns) ──────────────────── */}
-      {filteredTemplates.length > 0 ? (
+      {error ? (
+        <div className="flex flex-col items-center justify-center p-8 bg-background-elevated border border-border rounded-xl">
+          <p className="text-red-400 mb-4">{error}</p>
+          <Button variant="secondary" onClick={fetchTemplates}>Retry</Button>
+        </div>
+      ) : isLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {[1, 2, 3, 4, 5, 6].map((n) => (
+            <Skeleton key={n} className="h-[300px] w-full rounded-xl bg-background-elevated" />
+          ))}
+        </div>
+      ) : filteredTemplates.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filteredTemplates.map((template, idx) => (
             <motion.div
@@ -254,32 +298,16 @@ export default function Templates() {
         </div>
       ) : (
         /* Empty search state */
-        <motion.div
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="flex flex-col items-center justify-center p-16 text-center rounded-2xl border border-dashed border-border bg-background-elevated/20"
-        >
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/10 text-accent mb-4 border border-accent/20">
-            <SearchX size={22} />
-          </div>
-          <h3 className="text-base font-semibold text-foreground">
-            No templates found
-          </h3>
-          <p className="text-xs text-foreground-muted max-w-sm mt-1 mb-5">
-            We couldn't find any templates matching "{searchQuery}". Try
-            searching for another framework or clear your filters.
-          </p>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => {
-              setSearchQuery("");
-              setActiveCategory("All");
-            }}
-          >
-            Clear filters
-          </Button>
-        </motion.div>
+        <EmptyState
+          icon={SearchX}
+          title="No templates found"
+          description={`We couldn't find any templates matching "${searchQuery}". Try searching for another framework or clear your filters.`}
+          actionLabel="Clear filters"
+          onAction={() => {
+            setSearchQuery("");
+            setActiveCategory("All");
+          }}
+        />
       )}
 
       {/* Create Project Modal Pre-filled */}

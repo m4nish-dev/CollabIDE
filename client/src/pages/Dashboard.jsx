@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import {
   Plus,
   Search,
@@ -21,6 +21,7 @@ import { useSettingsStore } from "@/store/useSettingsStore";
 
 import { api } from "@/lib/api";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ProjectCardSkeleton } from "@/components/shared/ProjectCardSkeleton";
 import { ProjectCard } from "@/components/dashboard/ProjectCard";
 import { QuickActions } from "@/components/dashboard/QuickActions";
 import { StatsStrip } from "@/components/dashboard/StatsStrip";
@@ -43,6 +44,7 @@ export default function Dashboard({ defaultTab = "all" }) {
   const profile = useSettingsStore(state => state.profile);
   const [projectsList, setProjectsList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTab, setSelectedTab] = useState(null);
   const activeTab = selectedTab ?? defaultTab;
@@ -52,9 +54,10 @@ export default function Dashboard({ defaultTab = "all" }) {
     setSelectedTab(null);
   }, [defaultTab]);
 
-  useEffect(() => {
+  const fetchProjects = useCallback(() => {
     let mounted = true;
     setIsLoading(true);
+    setError(null);
     api.projects.list({ scope: activeTab })
       .then((res) => {
         if (mounted) {
@@ -65,6 +68,7 @@ export default function Dashboard({ defaultTab = "all" }) {
       .catch((err) => {
         if (mounted) {
           console.error("Failed to load projects", err);
+          setError(err.message || "Failed to load projects");
           setIsLoading(false);
         }
       });
@@ -72,6 +76,10 @@ export default function Dashboard({ defaultTab = "all" }) {
       mounted = false;
     };
   }, [activeTab]);
+
+  useEffect(() => {
+    return fetchProjects();
+  }, [fetchProjects]);
 
   const [selectedLanguage, setSelectedLanguage] = useState("All");
   const [sortOption, setSortOption] = useState("modified");
@@ -426,22 +434,28 @@ export default function Dashboard({ defaultTab = "all" }) {
           </div>
 
           {/* Projects Display: Grid or List */}
-          {isLoading ? (
+          {error ? (
+            <div className="flex flex-col items-center justify-center p-8 bg-background-elevated border border-border rounded-xl">
+              <p className="text-red-400 mb-4">{error}</p>
+              <Button variant="secondary" onClick={fetchProjects}>Retry</Button>
+            </div>
+          ) : isLoading ? (
             <div className={cn(
               viewMode === "grid" 
-                ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-1" 
+                ? "grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 pt-1" 
                 : "flex flex-col gap-2 pt-1"
             )}>
               {[1, 2, 3, 4, 5, 6].map((n) => (
-                <Skeleton 
-                  key={n} 
-                  className={viewMode === "grid" ? "h-40 w-full rounded-xl bg-background-elevated" : "h-16 w-full rounded-xl bg-background-elevated"} 
-                />
+                viewMode === "grid" ? (
+                  <ProjectCardSkeleton key={n} />
+                ) : (
+                  <Skeleton key={n} className="h-16 w-full rounded-xl bg-background-elevated" />
+                )
               ))}
             </div>
           ) : filteredProjects.length > 0 ? (
             viewMode === "grid" ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-1">
+              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 pt-1">
                 {filteredProjects.map((project, idx) => (
                   <ProjectCard
                     key={project.id}

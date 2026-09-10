@@ -132,7 +132,7 @@ export const WorkspaceMembersSettings = () => {
 
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <button className="p-1.5 rounded-md text-foreground-subtle hover:text-foreground hover:bg-background-elevated transition-colors">
+                            <button className="p-1.5 rounded-md text-foreground-subtle hover:text-foreground hover:bg-background-elevated transition-colors" aria-label="Member options">
                               <MoreVertical className="h-4 w-4" />
                             </button>
                           </DropdownMenuTrigger>

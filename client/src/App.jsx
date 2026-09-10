@@ -56,6 +56,8 @@ import { TopProgressBar } from "@/components/shared/TopProgressBar";
 import { ErrorBoundary } from "@/components/shared/ErrorBoundary";
 import { useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
+import { useEffect } from "react";
+import { useSettingsStore } from "@/store/useSettingsStore";
 
 const PageTransition = ({ children }) => (
   <motion.div
@@ -71,6 +73,29 @@ const PageTransition = ({ children }) => (
 
 const AppRoutes = () => {
   const location = useLocation();
+  const reducedMotion = useSettingsStore(state => state.appearance?.reducedMotion);
+
+  useEffect(() => {
+    if (reducedMotion) {
+      const style = document.createElement("style");
+      style.id = "reduced-motion-override";
+      style.textContent = `
+        * {
+          animation-duration: 0.001ms !important;
+          transition-duration: 0.001ms !important;
+        }
+      `;
+      document.head.appendChild(style);
+    } else {
+      const el = document.getElementById("reduced-motion-override");
+      if (el) el.remove();
+    }
+    return () => {
+      const el = document.getElementById("reduced-motion-override");
+      if (el) el.remove();
+    };
+  }, [reducedMotion]);
+
   return (
     <>
       <TopProgressBar />

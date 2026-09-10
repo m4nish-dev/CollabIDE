@@ -1,4 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
+import { api } from "@/lib/api";
+import { EditorSkeleton } from "@/components/shared/EditorSkeleton";
+import { FileExplorerSkeleton } from "@/components/shared/FileExplorerSkeleton";
 import { Group, Panel, Separator } from "react-resizable-panels";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useProjectStore } from "@/store/useProjectStore";
@@ -39,6 +43,51 @@ export default function IDEWorkspace() {
 
   // Bottom panel maximized state
   const [isBottomMaximized, setIsBottomMaximized] = useState(false);
+
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+    setIsLoading(true);
+    Promise.all([
+      api.projects.get(id),
+      api.files.tree(id)
+    ])
+      .then(() => {
+        if (mounted) {
+          setIsLoading(false);
+          const fileParam = searchParams.get("file");
+          if (fileParam) {
+            useProjectStore.getState().openTab(fileParam);
+          }
+        }
+      })
+      .catch((err) => {
+        if (mounted) {
+          if (err.status === 404 || err.message === "Not found") {
+            navigate("/project-not-found");
+          } else {
+            console.error(err);
+            setIsLoading(false); // Maybe show an error boundary inside the IDE, but for now just stop loading
+          }
+        }
+      });
+    return () => {
+      mounted = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, navigate]);
+
+  useEffect(() => {
+    if (activeFileId) {
+      setSearchParams({ file: activeFileId }, { replace: true });
+    } else {
+      setSearchParams({}, { replace: true });
+    }
+  }, [activeFileId, setSearchParams]);
 
   // ── Keyboard Shortcuts ─────────────────────────────────────────
   // ⌘S: Save file
@@ -135,12 +184,16 @@ export default function IDEWorkspace() {
   );
 
   return (
-    <div className="h-screen w-screen bg-background text-foreground flex flex-col overflow-hidden select-none font-sans">
-      {/* Top Bar (44px) */}
-      <IDETopBar />
+    <>
+      <div className="md:hidden flex h-screen w-screen items-center justify-center bg-background">
+        <MobileNotice />
+      </div>
+      <div className="hidden md:flex h-screen w-screen bg-background text-foreground flex-col overflow-hidden select-none font-sans">
+        {/* Top Bar (44px) */}
+        <IDETopBar />
 
-      {/* Main Workspace Area */}
-      <main id="main-content" className="flex-1 flex overflow-hidden">
+        {/* Main Workspace Area */}
+        <main id="main-content" className="flex-1 flex overflow-hidden">
         {/* Left Sidebars: Activity + Primary Panel */}
         <ActivityBar />
 
@@ -157,9 +210,15 @@ export default function IDEWorkspace() {
                   maxSize={40}
                   className="h-full overflow-hidden flex flex-col"
                 >
-                  {activeActivity === "explorer" && <FileExplorer />}
-                  {activeActivity === "search" && <FindInFiles />}
-                  {activeActivity === "git" && <SourceControlPanel />}
+                  {isLoading ? (
+                    <FileExplorerSkeleton />
+                  ) : activeActivity === "explorer" ? (
+                    <FileExplorer />
+                  ) : activeActivity === "search" ? (
+                    <FindInFiles />
+                  ) : activeActivity === "git" ? (
+                    <SourceControlPanel />
+                  ) : null}
                 </Panel>
                 <Separator className="w-1 bg-border/60 hover:bg-accent/70 active:bg-accent transition-colors cursor-col-resize z-10" />
               </>
@@ -179,7 +238,7 @@ export default function IDEWorkspace() {
                     minSize={20}
                     className="h-full overflow-hidden"
                   >
-                    <EditorArea />
+                    {isLoading ? <EditorSkeleton /> : <EditorArea />}
                   </Panel>
                 )}
 
@@ -231,14 +290,13 @@ export default function IDEWorkspace() {
       <StatusBar />
 
       {/* Modals & Notifications */}
-      <JoinNotification />
+      {/* Floating Modals and Dialogs */}
       <CommandPalette />
       <QuickOpen />
       <GlobalSearch />
+      <JoinNotification />
       <CommitHistoryPanel />
-
-      {/* Mobile Notice Overlay */}
-      <MobileNotice />
     </div>
+    </>
   );
 }

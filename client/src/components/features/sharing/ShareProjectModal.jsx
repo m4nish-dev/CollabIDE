@@ -167,7 +167,7 @@ export const ShareProjectModal = ({ isOpen, onClose }) => {
                   Share "{projectName}"
                   <Popover>
                     <PopoverTrigger asChild>
-                      <button className="text-foreground-muted hover:text-foreground transition-colors p-1 rounded hover:bg-background-hover">
+                      <button className="text-foreground-muted hover:text-foreground transition-colors p-1 rounded hover:bg-background-hover" aria-label="Help">
                         <HelpCircle className="h-3.5 w-3.5" />
                       </button>
                     </PopoverTrigger>
@@ -188,6 +188,7 @@ export const ShareProjectModal = ({ isOpen, onClose }) => {
             <button
               onClick={onClose}
               className="text-foreground-subtle hover:text-foreground p-1.5 rounded-md hover:bg-background-hover transition-colors"
+              aria-label="Close"
             >
               <X className="h-4 w-4" />
             </button>
@@ -243,6 +244,7 @@ export const ShareProjectModal = ({ isOpen, onClose }) => {
                         <button
                           onClick={() => removeEmail(email)}
                           className="ml-1.5 hover:text-accent-hover focus:outline-none"
+                          aria-label="Remove email"
                         >
                           <X className="h-3 w-3" />
                         </button>
@@ -317,7 +319,7 @@ export const ShareProjectModal = ({ isOpen, onClose }) => {
                               </select>
                               <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                  <button className="p-1 rounded text-foreground-subtle hover:text-foreground hover:bg-background opacity-0 group-hover:opacity-100 transition-all">
+                                  <button className="p-1 rounded text-foreground-subtle hover:text-foreground hover:bg-background opacity-0 group-hover:opacity-100 transition-all" aria-label="More options">
                                     <MoreVertical className="h-4 w-4" />
                                   </button>
                                 </DropdownMenuTrigger>

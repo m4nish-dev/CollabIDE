@@ -1,5 +1,7 @@
-import React, { useState } from "react";
-import { useSettingsStore } from "@/store/useSettingsStore";
+import React, { useState, useEffect } from "react";
+import { api } from "@/lib/api";
+import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
 import { 
   Bell, 
   CheckCircle2, 
@@ -12,8 +14,60 @@ import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/shared/EmptyState";
 
 export const NotificationsPage = () => {
-  const { notifications, markAllNotificationsAsRead, markNotificationAsRead } = useSettingsStore();
+  const [notifications, setNotifications] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [filterType, setFilterType] = useState("all");
+  const [isMarkingAll, setIsMarkingAll] = useState(false);
+
+  const fetchNotifications = () => {
+    let mounted = true;
+    setIsLoading(true);
+    setError(null);
+    api.notifications.list()
+      .then((res) => {
+        if (mounted) {
+          setNotifications(res);
+          setIsLoading(false);
+        }
+      })
+      .catch((err) => {
+        if (mounted) {
+          console.error("Failed to load notifications", err);
+          setError(err.message || "Failed to load notifications");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      mounted = false;
+    };
+  };
+
+  useEffect(() => {
+    return fetchNotifications();
+  }, []);
+
+  const handleMarkAllRead = async () => {
+    setIsMarkingAll(true);
+    try {
+      await api.notifications.markAllRead();
+      setNotifications(prev => prev.map(n => ({ ...n, read: true })));
+      toast.success("All notifications marked as read");
+    } catch (err) {
+      toast.error(err.message || "Failed to mark all as read");
+    } finally {
+      setIsMarkingAll(false);
+    }
+  };
+
+  const handleMarkRead = async (id) => {
+    try {
+      await api.notifications.markRead(id);
+      setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
+    } catch (err) {
+      toast.error(err.message || "Failed to mark as read");
+    }
+  };
 
   const unreadCount = notifications.filter((n) => !n.read).length;
 
@@ -106,17 +160,30 @@ export const NotificationsPage = () => {
             </div>
             {unreadCount > 0 && (
               <Button 
-                onClick={markAllNotificationsAsRead}
+                onClick={handleMarkAllRead}
+                disabled={isMarkingAll}
                 variant="outline"
                 className="h-9 gap-2"
               >
-                <Check className="h-4 w-4" /> Mark all as read
+                <Check className="h-4 w-4" /> 
+                {isMarkingAll ? "Marking..." : "Mark all as read"}
               </Button>
             )}
           </div>
 
           <div className="flex-1 overflow-y-auto p-6 md:p-8">
-            {filteredNotifications.length === 0 ? (
+            {error ? (
+              <div className="flex flex-col items-center justify-center p-8 bg-background-elevated border border-border rounded-xl">
+                <p className="text-red-400 mb-4">{error}</p>
+                <Button variant="secondary" onClick={fetchNotifications}>Retry</Button>
+              </div>
+            ) : isLoading ? (
+              <div className="space-y-3">
+                {[1, 2, 3, 4, 5].map((n) => (
+                  <Skeleton key={n} className="h-[88px] w-full rounded-xl bg-background-elevated border border-border" />
+                ))}
+              </div>
+            ) : filteredNotifications.length === 0 ? (
               <EmptyState 
                 icon={<CheckCircle2 className="h-8 w-8 text-emerald-500" />}
                 title="You're all caught up!"
@@ -127,7 +194,7 @@ export const NotificationsPage = () => {
                 {filteredNotifications.map((n) => (
                   <div 
                     key={n.id}
-                    onClick={() => { if (!n.read) markNotificationAsRead(n.id); }}
+                    onClick={() => { if (!n.read) handleMarkRead(n.id); }}
                     className={`group relative flex items-start gap-4 p-5 rounded-xl border transition-all cursor-pointer ${
                       !n.read 
                         ? "bg-accent/5 border-accent/20 hover:border-accent/40" 

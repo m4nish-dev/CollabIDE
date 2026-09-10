@@ -97,6 +97,41 @@ export const api = {
       if (!user) throw new Error("Not authenticated");
       return user;
     },
+    sessions: async () => {
+      if (BASE_URL) return request("GET", "/auth/sessions");
+      await delay(500);
+      return [
+        { id: 1, device: "MacBook Pro 14\"", browser: "Chrome 120", location: "San Francisco, CA", ip: "192.168.1.1", time: "Active now", current: true },
+        { id: 2, device: "iPhone 13 Pro", browser: "Safari Mobile", location: "San Francisco, CA", ip: "10.0.0.45", time: "2 hours ago", current: false },
+        { id: 3, device: "Windows PC", browser: "Firefox 118", location: "Seattle, WA", ip: "172.16.0.2", time: "Yesterday", current: false },
+        { id: 4, device: "iPad Air", browser: "Safari", location: "Portland, OR", ip: "192.168.1.5", time: "3 days ago", current: false },
+      ];
+    },
+    revokeSession: async (id) => {
+      if (BASE_URL) return request("DELETE", `/auth/sessions/${id}`);
+      await delay(600);
+      return { success: true };
+    },
+    revokeAllOtherSessions: async () => {
+      if (BASE_URL) return request("DELETE", "/auth/sessions/others");
+      await delay(800);
+      return { success: true };
+    },
+    loginHistory: async () => {
+      if (BASE_URL) return request("GET", "/auth/login-history");
+      await delay(400);
+      return [
+        { id: 1, device: "MacBook Pro 14\"", browser: "Chrome 120", location: "San Francisco, CA", ip: "192.168.1.1", time: "Active now", current: true },
+        { id: 2, device: "iPhone 13 Pro", browser: "Safari Mobile", location: "San Francisco, CA", ip: "10.0.0.45", time: "2 hours ago", current: false },
+        { id: 3, device: "Windows PC", browser: "Firefox 118", location: "Seattle, WA", ip: "172.16.0.2", time: "Yesterday", current: false },
+      ];
+    },
+    enable2FA: async ({ code }) => {
+      if (BASE_URL) return request("POST", "/auth/2fa/enable", { code });
+      await delay(800);
+      if (code !== "123456" && code.length !== 6) throw new Error("Invalid code");
+      return { success: true };
+    },
   },
   projects: {
     list: async ({ scope, search, sort } = {}) => {
@@ -221,6 +256,11 @@ export const api = {
       if (BASE_URL) return request("DELETE", `/projects/${projectId}/members/${memberId}`);
       await delay(500);
       return { success: true };
+    },
+    acceptInvite: async (token) => {
+      if (BASE_URL) return request("POST", "/members/accept-invite", { token });
+      await delay(800);
+      return { success: true, projectId: "proj_" + generateId() };
     },
   },
   notifications: {

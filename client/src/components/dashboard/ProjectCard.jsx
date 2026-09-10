@@ -67,6 +67,7 @@ const CardMenu = ({ project, onStar }) => (
       <button
         onClick={(e) => e.stopPropagation()}
         className="flex h-7 w-7 items-center justify-center rounded-md text-foreground-subtle opacity-0 group-hover:opacity-100 transition-all hover:bg-background-hover hover:text-foreground"
+        aria-label="Project options"
       >
         <MoreHorizontal size={15} />
       </button>
@@ -198,6 +199,7 @@ export const ProjectCard = ({ project, index = 0, view = "grid" }) => {
                   setStarred((s) => !s);
                 }}
                 className="p-1 rounded text-foreground-subtle hover:text-warning transition-colors"
+                aria-label={starred ? "Unstar project" : "Star project"}
               >
                 <Star
                   size={14}

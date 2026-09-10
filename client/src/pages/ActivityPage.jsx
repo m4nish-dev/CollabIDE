@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import { MOCK_ACTIVITIES } from "@/lib/mockData";
+import { api } from "@/lib/api";
+import { EmptyState } from "@/components/shared/EmptyState";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 import { 
   GitBranch, 
   GitCommit, 
@@ -9,13 +12,42 @@ import {
   PlayCircle,
   Filter,
   Calendar,
-  ChevronDown
+  ChevronDown,
+  Activity
 } from "lucide-react";
 
 export const ActivityPage = () => {
-  const [activities, setActivities] = useState(MOCK_ACTIVITIES);
-  const [isLoading, setIsLoading] = useState(false);
+  const [activities, setActivities] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
   const loaderRef = useRef(null);
+
+  const fetchActivities = () => {
+    let mounted = true;
+    setIsLoading(true);
+    setError(null);
+    api.activity.list()
+      .then((res) => {
+        if (mounted) {
+          setActivities(res);
+          setIsLoading(false);
+        }
+      })
+      .catch((err) => {
+        if (mounted) {
+          console.error("Failed to load activity", err);
+          setError(err.message || "Failed to load activity");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      mounted = false;
+    };
+  };
+
+  useEffect(() => {
+    return fetchActivities();
+  }, []);
 
   // Group activities
   const groupActivities = (acts) => {
@@ -118,7 +150,25 @@ export const ActivityPage = () => {
 
         {/* Feed Content */}
         <div className="flex-1 overflow-y-auto p-6 md:p-8 space-y-10">
-          {Object.entries(groupedActivities).map(([dateLabel, items]) => {
+          {error ? (
+            <div className="flex flex-col items-center justify-center p-8 bg-background-elevated border border-border rounded-xl">
+              <p className="text-red-400 mb-4">{error}</p>
+              <Button variant="secondary" onClick={fetchActivities}>Retry</Button>
+            </div>
+          ) : isLoading ? (
+            <div className="space-y-4">
+              {[1, 2, 3, 4, 5].map((n) => (
+                <Skeleton key={n} className="h-20 w-full rounded-xl bg-background-elevated border border-border" />
+              ))}
+            </div>
+          ) : activities.length === 0 ? (
+            <EmptyState
+              icon={Activity}
+              title="No activity found"
+              description="There hasn't been any activity in this workspace yet."
+            />
+          ) : (
+            Object.entries(groupedActivities).map(([dateLabel, items]) => {
             if (items.length === 0) return null;
             
             return (
@@ -167,7 +217,7 @@ export const ActivityPage = () => {
                 </div>
               </div>
             );
-          })}
+          }))}
 
           <div ref={loaderRef} className="py-6 flex justify-center">
             {isLoading && (

@@ -60,6 +60,7 @@ export const CommitHistoryPanel = () => {
           <button 
             onClick={() => setIsCommitHistoryOpen(false)}
             className="p-1.5 rounded-md text-foreground-muted hover:text-foreground hover:bg-background-hover transition-colors"
+            aria-label="Close commit history"
           >
             <X className="h-5 w-5" />
           </button>
@@ -103,7 +104,7 @@ export const CommitHistoryPanel = () => {
                       onClick={() => toggleCommit(commit.id)}
                       className="flex items-start gap-3 p-3 cursor-pointer"
                     >
-                      <button className="mt-0.5 shrink-0 text-foreground-subtle hover:text-foreground">
+                      <button className="mt-0.5 shrink-0 text-foreground-subtle hover:text-foreground" aria-label={isExpanded ? "Collapse" : "Expand"}>
                         {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                       </button>
                       

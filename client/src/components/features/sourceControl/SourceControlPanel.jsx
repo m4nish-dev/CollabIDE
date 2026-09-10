@@ -149,12 +149,12 @@ export const SourceControlPanel = () => {
           Source Control
         </h2>
         <div className="flex items-center gap-1">
-          <button className="p-1 rounded text-foreground-muted hover:text-foreground hover:bg-background-hover transition-colors">
+          <button className="p-1 rounded text-foreground-muted hover:text-foreground hover:bg-background-hover transition-colors" aria-label="Refresh">
             <RefreshCw className="h-3.5 w-3.5" />
           </button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button className="p-1 rounded text-foreground-muted hover:text-foreground hover:bg-background-hover transition-colors">
+              <button className="p-1 rounded text-foreground-muted hover:text-foreground hover:bg-background-hover transition-colors" aria-label="More options">
                 <MoreHorizontal className="h-3.5 w-3.5" />
               </button>
             </DropdownMenuTrigger>
@@ -195,6 +195,7 @@ export const SourceControlPanel = () => {
                 <button
                   disabled={stagedFiles.length === 0 || !message.trim()}
                   className="h-7 px-1 bg-accent hover:bg-accent-hover text-white rounded-r flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed transition-colors border-l border-white/20"
+                  aria-label="More commit options"
                 >
                   <ChevronDown className="h-3.5 w-3.5" />
                 </button>

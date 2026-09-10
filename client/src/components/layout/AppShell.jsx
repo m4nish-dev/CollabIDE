@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { NavLink, useLocation, useNavigate, Outlet } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -19,6 +19,8 @@ import {
   User,
   ChevronDown,
   Plus,
+  Menu,
+  X,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -38,6 +40,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { useSettingsStore } from "@/store/useSettingsStore";
 import { useAuthStore } from "@/store/useAuthStore";
 
@@ -129,7 +140,7 @@ const Sidebar = ({ collapsed, onToggle }) => {
     <motion.aside
       animate={{ width: collapsed ? 64 : 240 }}
       transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-      className="relative flex flex-col h-full bg-background-elevated border-r border-border overflow-hidden shrink-0"
+      className="relative hidden md:flex flex-col h-full bg-background-elevated border-r border-border overflow-hidden shrink-0"
     >
       {/* Top: Logo + collapse toggle */}
       <div className="flex items-center justify-between px-3 h-14 border-b border-border">
@@ -310,15 +321,50 @@ const Sidebar = ({ collapsed, onToggle }) => {
 // Topbar
 // ─────────────────────────────────────────────
 
-const Topbar = ({ breadcrumbs = [] }) => {
+const Topbar = ({ onMenuClick }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const profile = useSettingsStore(state => state.profile);
   const account = useSettingsStore(state => state.account);
   
+  const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
+
+  const breadcrumbs = useMemo(() => {
+    const path = location.pathname;
+    if (path.startsWith("/dashboard")) return [{ label: "Dashboard" }];
+    if (path.startsWith("/projects")) return [{ label: "Projects" }];
+    if (path.startsWith("/shared")) return [{ label: "Shared with me" }];
+    if (path.startsWith("/starred")) return [{ label: "Starred" }];
+    if (path.startsWith("/templates")) return [{ label: "Templates" }];
+    if (path.startsWith("/activity")) return [{ label: "Activity" }];
+    if (path.startsWith("/notifications")) return [{ label: "Notifications" }];
+    
+    if (path.startsWith("/workspace/settings")) {
+      const section = path.split("/").pop();
+      const formatSection = (str) => str.charAt(0).toUpperCase() + str.slice(1).replace("-", " ");
+      return [{ label: "Workspace" }, { label: "Settings" }, { label: formatSection(section) }];
+    }
+    
+    if (path.startsWith("/settings")) {
+      const section = path.split("/").pop();
+      const formatSection = (str) => str.charAt(0).toUpperCase() + str.slice(1).replace("-", " ");
+      return [{ label: "Settings" }, { label: formatSection(section) }];
+    }
+    
+    return [];
+  }, [location.pathname]);
+  
   return (
     <header className="h-14 flex items-center justify-between px-4 border-b border-border bg-background-elevated/60 backdrop-blur-sm shrink-0">
-      {/* Left: breadcrumbs */}
+      {/* Left: breadcrumbs & Mobile Menu */}
       <div className="flex items-center gap-1.5 text-sm">
+        <button
+          onClick={onMenuClick}
+          className="md:hidden p-1.5 -ml-1.5 mr-1 rounded-md text-foreground-subtle hover:text-foreground hover:bg-background-hover transition-colors"
+          aria-label="Open mobile menu"
+        >
+          <Menu size={18} />
+        </button>
         {breadcrumbs.length > 0 ? (
           breadcrumbs.map((crumb, i) => (
             <React.Fragment key={i}>
@@ -410,7 +456,7 @@ const Topbar = ({ breadcrumbs = [] }) => {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="gap-2 cursor-pointer text-danger focus:text-danger focus:bg-danger/10"
-                onClick={() => navigate("/login")}
+                onClick={() => setIsLogoutDialogOpen(true)}
               >
                 <LogOut size={14} /> Log out
               </DropdownMenuItem>
@@ -418,6 +464,25 @@ const Topbar = ({ breadcrumbs = [] }) => {
           </DropdownMenu>
         </div>
       </div>
+
+      <Dialog open={isLogoutDialogOpen} onOpenChange={setIsLogoutDialogOpen}>
+        <DialogContent className="sm:max-w-[425px] bg-background border-border text-foreground">
+          <DialogHeader>
+            <DialogTitle>Sign out of CollabIDE?</DialogTitle>
+            <DialogDescription className="text-foreground-subtle">
+              Are you sure you want to log out? You will need to log in again to access your projects.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:gap-0 mt-4">
+            <Button variant="outline" onClick={() => setIsLogoutDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={() => navigate("/login")}>
+              Sign out
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </header>
   );
 };
@@ -426,8 +491,9 @@ const Topbar = ({ breadcrumbs = [] }) => {
 // AppShell
 // ─────────────────────────────────────────────
 
-export const AppShell = ({ breadcrumbs, children, mainClassName }) => {
+export const AppShell = ({ children, mainClassName }) => {
   const [collapsed, setCollapsed] = useState(false);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   return (
     <TooltipProvider>
@@ -437,10 +503,55 @@ export const AppShell = ({ breadcrumbs, children, mainClassName }) => {
           onToggle={() => setCollapsed((c) => !c)}
         />
 
-        <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
-          <Topbar breadcrumbs={breadcrumbs} />
+        {/* Mobile Drawer Overlay */}
+        <AnimatePresence>
+          {isMobileOpen && (
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsMobileOpen(false)}
+                className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm md:hidden"
+              />
+              <motion.div
+                initial={{ x: "-100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "-100%" }}
+                transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                className="fixed inset-y-0 left-0 z-50 w-64 bg-background-elevated border-r border-border shadow-xl md:hidden flex flex-col"
+              >
+                <div className="flex items-center justify-between px-3 h-14 border-b border-border">
+                  <Logo />
+                  <button
+                    onClick={() => setIsMobileOpen(false)}
+                    className="p-1.5 rounded-md text-foreground-subtle hover:text-foreground hover:bg-background-hover transition-colors"
+                    aria-label="Close menu"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+                <div className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+                  <div className="text-xs font-semibold text-foreground-muted mb-2 px-2 uppercase tracking-wider">
+                    Menu
+                  </div>
+                  {NAV_ITEMS.map((item) => (
+                    <SidebarNavItem
+                      key={item.label}
+                      item={item}
+                      collapsed={false}
+                    />
+                  ))}
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
 
-          <main className={cn("flex-1 overflow-y-auto flex flex-col", mainClassName !== undefined ? mainClassName : "p-6")}>
+        <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+          <Topbar onMenuClick={() => setIsMobileOpen(true)} />
+
+          <main className={cn("flex-1 overflow-y-auto flex flex-col relative", mainClassName !== undefined ? mainClassName : "p-6")}>
             {children || <Outlet />}
           </main>
         </div>

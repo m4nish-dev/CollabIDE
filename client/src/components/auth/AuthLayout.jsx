@@ -7,7 +7,7 @@ export const AuthLayout = ({ children }) => {
   return (
     <div className="flex h-screen w-full overflow-hidden bg-background">
       {/* Left — Form panel */}
-      <div className="relative flex w-full flex-col lg:max-w-[480px] overflow-y-auto">
+      <div className="relative flex w-full flex-col md:max-w-[480px] overflow-y-auto">
         {/* Logo header */}
         <div className="px-8 pt-8 pb-4">
           <Logo />
@@ -43,7 +43,7 @@ export const AuthLayout = ({ children }) => {
       </div>
 
       {/* Right — Visual panel (hidden on mobile) */}
-      <div className="hidden lg:flex flex-1">
+      <div className="hidden md:flex flex-1">
         <AuthVisual />
       </div>
     </div>

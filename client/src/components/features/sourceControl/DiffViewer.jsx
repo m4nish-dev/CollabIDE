@@ -38,6 +38,7 @@ export const DiffViewer = ({ file, originalContent, modifiedContent, onClose }) 
               onClick={() => setIsInline(false)}
               className={`p-1.5 rounded-sm transition-colors ${!isInline ? "bg-accent/20 text-accent" : "text-foreground-muted hover:text-foreground"}`}
               title="Side by Side View"
+              aria-label="Side by side view"
             >
               <Columns className="h-3.5 w-3.5" />
             </button>
@@ -45,6 +46,7 @@ export const DiffViewer = ({ file, originalContent, modifiedContent, onClose }) 
               onClick={() => setIsInline(true)}
               className={`p-1.5 rounded-sm transition-colors ${isInline ? "bg-accent/20 text-accent" : "text-foreground-muted hover:text-foreground"}`}
               title="Inline View"
+              aria-label="Inline view"
             >
               <AlignLeft className="h-3.5 w-3.5" />
             </button>
@@ -53,6 +55,7 @@ export const DiffViewer = ({ file, originalContent, modifiedContent, onClose }) 
             <button 
               onClick={onClose}
               className="p-1.5 text-foreground-muted hover:text-foreground hover:bg-background-hover rounded transition-colors"
+              aria-label="Close diff viewer"
             >
               <X className="h-4 w-4" />
             </button>

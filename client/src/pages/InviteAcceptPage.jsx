@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { RoleBadge } from "@/components/shared/RoleBadge";
 import { toast } from "@/lib/toast";
 import { motion } from "framer-motion";
+import { api } from "@/lib/api";
 
 export default function InviteAcceptPage() {
   const { token } = useParams();
@@ -22,10 +23,20 @@ export default function InviteAcceptPage() {
     tokenRef: token ? token.slice(0, 8).toUpperCase() : "XXXXXXXX",
   };
 
-  const handleAccept = () => {
-    toast.success(`You've joined ${inviteDetails.workspaceName}!`);
-    // Redirect to dashboard or project
-    navigate("/dashboard");
+  const [isAccepting, setIsAccepting] = useState(false);
+
+  const handleAccept = async () => {
+    setIsAccepting(true);
+    try {
+      await api.members.acceptInvite(token);
+      toast.success(`You've joined ${inviteDetails.workspaceName}!`);
+      // Redirect to dashboard or project
+      navigate("/dashboard");
+    } catch (err) {
+      toast.error(err.message || "Failed to accept invitation");
+    } finally {
+      setIsAccepting(false);
+    }
   };
 
   const handleDecline = () => {
@@ -106,9 +117,10 @@ export default function InviteAcceptPage() {
             <div className="flex flex-col gap-3">
               <Button
                 onClick={handleAccept}
+                disabled={isAccepting}
                 className="w-full h-11 bg-accent hover:bg-accent-hover text-white font-medium"
               >
-                Accept invitation
+                {isAccepting ? "Accepting..." : "Accept invitation"}
               </Button>
               <Button
                 onClick={handleDecline}

@@ -1,27 +1,70 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { SettingsLayout } from "@/components/layout/SettingsLayout";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { EmptyState } from "@/components/shared/EmptyState";
 import { Laptop, Smartphone, Globe, ShieldAlert } from "lucide-react";
 import { toast } from "@/lib/toast";
-
-const INITIAL_SESSIONS = [
-  { id: 1, device: "MacBook Pro 14\"", browser: "Chrome 120", location: "San Francisco, CA", ip: "192.168.1.1", time: "Active now", current: true },
-  { id: 2, device: "iPhone 13 Pro", browser: "Safari Mobile", location: "San Francisco, CA", ip: "10.0.0.45", time: "2 hours ago", current: false },
-  { id: 3, device: "Windows PC", browser: "Firefox 118", location: "Seattle, WA", ip: "172.16.0.2", time: "Yesterday", current: false },
-  { id: 4, device: "iPad Air", browser: "Safari", location: "Portland, OR", ip: "192.168.1.5", time: "3 days ago", current: false },
-];
+import { api } from "@/lib/api";
 
 export const SessionsSettings = () => {
-  const [sessions, setSessions] = useState(INITIAL_SESSIONS);
+  const [sessions, setSessions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [isRevokingAll, setIsRevokingAll] = useState(false);
+  const [revokingId, setRevokingId] = useState(null);
 
-  const revokeSession = (id) => {
-    setSessions(prev => prev.filter(s => s.id !== id));
-    toast.success("Session revoked successfully");
+  const fetchSessions = () => {
+    let mounted = true;
+    setIsLoading(true);
+    setError(null);
+    api.auth.sessions()
+      .then((res) => {
+        if (mounted) {
+          setSessions(res);
+          setIsLoading(false);
+        }
+      })
+      .catch((err) => {
+        if (mounted) {
+          console.error("Failed to load sessions", err);
+          setError(err.message || "Failed to load sessions");
+          setIsLoading(false);
+        }
+      });
+    return () => {
+      mounted = false;
+    };
   };
 
-  const revokeAllOtherSessions = () => {
-    setSessions(prev => prev.filter(s => s.current));
-    toast.success("All other sessions revoked");
+  useEffect(() => {
+    return fetchSessions();
+  }, []);
+
+  const revokeSession = async (id) => {
+    setRevokingId(id);
+    try {
+      await api.auth.revokeSession(id);
+      setSessions(prev => prev.filter(s => s.id !== id));
+      toast.success("Session revoked successfully");
+    } catch (err) {
+      toast.error(err.message || "Failed to revoke session");
+    } finally {
+      setRevokingId(null);
+    }
+  };
+
+  const revokeAllOtherSessions = async () => {
+    setIsRevokingAll(true);
+    try {
+      await api.auth.revokeAllOtherSessions();
+      setSessions(prev => prev.filter(s => s.current));
+      toast.success("All other sessions revoked");
+    } catch (err) {
+      toast.error(err.message || "Failed to revoke sessions");
+    } finally {
+      setIsRevokingAll(false);
+    }
   };
 
   return (
@@ -44,11 +87,11 @@ export const SessionsSettings = () => {
           </div>
           <Button 
             onClick={revokeAllOtherSessions}
-            disabled={sessions.length <= 1}
+            disabled={sessions.length <= 1 || isRevokingAll || isLoading}
             variant="destructive" 
             className="shrink-0 h-9 bg-red-500 hover:bg-red-600 text-white border-transparent"
           >
-            Sign out all others
+            {isRevokingAll ? "Revoking..." : "Sign out all others"}
           </Button>
         </div>
 
@@ -60,10 +103,30 @@ export const SessionsSettings = () => {
             </span>
           </div>
           
-          {sessions.length === 0 ? (
-            <div className="p-8 text-center text-foreground-muted text-sm">
-              No active sessions found.
+          {error ? (
+            <div className="flex flex-col items-center justify-center p-8">
+              <p className="text-red-400 mb-4">{error}</p>
+              <Button variant="secondary" onClick={fetchSessions}>Retry</Button>
             </div>
+          ) : isLoading ? (
+            <div className="divide-y divide-border/50">
+              {[1, 2, 3].map((n) => (
+                <div key={n} className="p-4 flex flex-col sm:flex-row sm:items-center gap-4">
+                  <Skeleton className="h-10 w-10 rounded-lg shrink-0 bg-background-elevated" />
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-4 w-40 bg-background-elevated" />
+                    <Skeleton className="h-3 w-60 bg-background-elevated" />
+                  </div>
+                  <Skeleton className="h-8 w-20 shrink-0 bg-background-elevated" />
+                </div>
+              ))}
+            </div>
+          ) : sessions.length === 0 ? (
+            <EmptyState
+              icon={Laptop}
+              title="No active sessions"
+              description="You have no other active sessions."
+            />
           ) : (
             <div className="divide-y divide-border/50">
               {sessions.map((session) => (
@@ -102,10 +165,11 @@ export const SessionsSettings = () => {
                     {!session.current && (
                       <Button 
                         onClick={() => revokeSession(session.id)}
+                        disabled={revokingId === session.id}
                         variant="outline" 
                         className="h-8 text-xs text-red-400 hover:text-red-500 border-border hover:bg-red-500/10"
                       >
-                        Revoke
+                        {revokingId === session.id ? "Revoking..." : "Revoke"}
                       </Button>
                     )}
                   </div>
