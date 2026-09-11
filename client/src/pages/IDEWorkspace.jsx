@@ -22,6 +22,8 @@ import { GlobalSearch } from "@/components/ide/GlobalSearch";
 import { FindInFiles } from "@/components/ide/FindInFiles";
 import { toast } from "@/lib/toast";
 import { MobileNotice } from "@/components/shared/MobileNotice";
+import { getSocket, joinProject, leaveProject, openFile, onPresence, onFileOpen, onCursor, onEdit } from "@/lib/socket";
+import { useCollaborationStore } from "@/store/useCollaborationStore";
 
 export default function IDEWorkspace() {
   const {
@@ -41,6 +43,17 @@ export default function IDEWorkspace() {
     setIsGlobalSearchOpen,
   } = useProjectStore();
 
+  const {
+    collaborators,
+    addCollaborator,
+    removeCollaborator,
+    updateCollaboratorStatus,
+    updateCollaboratorFile,
+    updateCollaboratorCursor,
+    updateCollaboratorSelection,
+    addJoinNotification,
+  } = useCollaborationStore();
+
   // Bottom panel maximized state
   const [isBottomMaximized, setIsBottomMaximized] = useState(false);
 
@@ -48,6 +61,75 @@ export default function IDEWorkspace() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [isLoading, setIsLoading] = useState(true);
+
+  // Socket connection
+  useEffect(() => {
+    if (!id) return;
+    const socket = getSocket();
+
+    const handleConnect = () => {
+      joinProject(id);
+    };
+
+    if (socket.connected) {
+      handleConnect();
+    } else {
+      socket.on("connect", handleConnect);
+    }
+
+    const unsubPresence = onPresence((data) => {
+      const { action, id: userId, name, avatar, role } = data;
+      if (action === "join") {
+        const exists = useCollaborationStore.getState().collaborators.find((c) => c.id === userId);
+        if (!exists) {
+          addCollaborator({
+            id: userId,
+            name,
+            avatar,
+            role,
+            status: "online",
+            currentFile: null,
+            cursorPosition: null,
+            selection: null,
+          });
+          addJoinNotification(`${name} joined the project`, avatar);
+        } else {
+          updateCollaboratorStatus(userId, "online");
+        }
+      } else if (action === "leave") {
+        removeCollaborator(userId);
+      }
+    });
+
+    const unsubFileOpen = onFileOpen((data) => {
+      updateCollaboratorFile(data.id, data.filePath);
+    });
+
+    const unsubCursor = onCursor((data) => {
+      updateCollaboratorCursor(data.userId, data.position);
+    });
+
+    const unsubEdit = onEdit((data) => {
+      // It's a remote edit, update the file content
+      useProjectStore.getState().updateFileContent(data.filePath, data.patch, true);
+    });
+
+    return () => {
+      socket.off("connect", handleConnect);
+      leaveProject(id);
+      unsubPresence();
+      unsubFileOpen();
+      unsubCursor();
+      unsubEdit();
+    };
+  }, [id, addCollaborator, removeCollaborator, updateCollaboratorStatus, updateCollaboratorFile, updateCollaboratorCursor, addJoinNotification]);
+
+  // Open active file in socket room
+  useEffect(() => {
+    if (id && activeFileId) {
+      openFile(id, activeFileId);
+    }
+  }, [id, activeFileId]);
 
   useEffect(() => {
     let mounted = true;

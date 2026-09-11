@@ -23,6 +23,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useParams } from "react-router-dom";
+import { sendCursor, sendEdit } from "@/lib/socket";
 
 // Helper for color-coded file icons
 function getFileIcon(filename) {
@@ -77,6 +79,7 @@ export const EditorArea = () => {
   } = useProjectStore();
 
   const { collaborators } = useCollaborationStore();
+  const { id } = useParams();
   
   const settingsTheme = useSettingsStore(state => state.appearance?.theme || "dark");
   const isLight = settingsTheme === "light" || (settingsTheme === "system" && !window.matchMedia("(prefers-color-scheme: dark)").matches);
@@ -101,11 +104,27 @@ export const EditorArea = () => {
     monaco.editor.setTheme(monacoThemeName);
 
     editor.onDidChangeCursorPosition((e) => {
-      setCursorPosition({
-        lineNumber: e.position.lineNumber,
-        column: e.position.column,
-      });
+      const position = {
+        line: e.position.lineNumber,
+        col: e.position.column,
+      };
+      setCursorPosition(position);
+      if (id && activeNode?.path) {
+        sendCursor(id, activeNode.path, position);
+      }
     });
+  };
+
+  const editTimeoutRef = useRef(null);
+  const handleEditorChange = (val) => {
+    if (!activeNode?.path) return;
+    updateFileContent(activeNode.path, val || "");
+    if (editTimeoutRef.current) clearTimeout(editTimeoutRef.current);
+    editTimeoutRef.current = setTimeout(() => {
+      if (id) {
+        sendEdit(id, activeNode.path, val || "");
+      }
+    }, 200);
   };
 
   // Breadcrumbs breakdown
@@ -296,9 +315,7 @@ export const EditorArea = () => {
                 value={activeNode.content || ""}
                 theme={monacoThemeName}
                 onMount={handleEditorMount}
-                onChange={(val) =>
-                  updateFileContent(activeNode.path, val || "")
-                }
+                onChange={handleEditorChange}
                 options={{
                   fontSize: 13.5,
                   fontFamily:

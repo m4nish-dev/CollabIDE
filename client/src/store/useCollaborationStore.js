@@ -37,7 +37,7 @@ const MOCK_COLLABORATORS = [
 ];
 
 export const useCollaborationStore = create((set) => ({
-  collaborators: MOCK_COLLABORATORS,
+  collaborators: [],
   connectionStatus: "Connected", // 'Connected' | 'Syncing...' | 'Reconnecting...' | 'Offline'
   recentJoins: [], // { id, name, avatar, timestamp }
 
