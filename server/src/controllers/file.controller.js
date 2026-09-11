@@ -4,6 +4,15 @@ import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { recordActivity } from "../services/activity.service.js";
 
+let getIo;
+const getSocketIo = async () => {
+  if (!getIo) {
+    const sockets = await import("../sockets/index.js");
+    getIo = sockets.getIo;
+  }
+  return getIo();
+};
+
 const updateProjectActivity = async (projectId) => {
   await Project.findByIdAndUpdate(projectId, { lastActivityAt: Date.now() });
 };
@@ -47,6 +56,11 @@ export const writeFile = asyncHandler(async (req, res) => {
     target: file.name,
   });
 
+  try {
+    const io = await getSocketIo();
+    io.to(`project:${projectId}`).emit("file:updated", file);
+  } catch (err) {}
+
   res.status(200).json({ success: true, data: file });
 });
 
@@ -84,6 +98,11 @@ export const createFile = asyncHandler(async (req, res) => {
     target: newFile.name,
   });
 
+  try {
+    const io = await getSocketIo();
+    io.to(`project:${projectId}`).emit("file:created", newFile);
+  } catch (err) {}
+
   res.status(201).json({ success: true, data: newFile });
 });
 
@@ -111,6 +130,11 @@ export const deleteFile = asyncHandler(async (req, res) => {
     action: "file.deleted",
     target: file.name,
   });
+
+  try {
+    const io = await getSocketIo();
+    io.to(`project:${projectId}`).emit("file:deleted", { path, type: file.type });
+  } catch (err) {}
 
   res.status(200).json({ success: true, data: null, message: "Deleted successfully" });
 });
@@ -160,5 +184,12 @@ export const renameFile = asyncHandler(async (req, res) => {
   await file.save();
 
   await updateProjectActivity(projectId);
+
+  try {
+    const io = await getSocketIo();
+    io.to(`project:${projectId}`).emit("file:deleted", { path: oldPath, type: file.type });
+    io.to(`project:${projectId}`).emit("file:created", file);
+  } catch (err) {}
+
   res.status(200).json({ success: true, data: file });
 });

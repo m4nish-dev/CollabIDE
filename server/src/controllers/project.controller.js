@@ -16,7 +16,21 @@ const slugify = (text) =>
     .replace(/--+/g, "-");
 
 export const createProject = asyncHandler(async (req, res) => {
-  const { name, description, visibility, templateId, workspaceId } = req.body;
+  let { name, description, visibility, templateId, workspaceId } = req.body;
+
+  if (!workspaceId) {
+    const { Workspace } = await import("../models/Workspace.js");
+    let workspace = await Workspace.findOne({ ownerId: req.user._id });
+    if (!workspace) {
+      workspace = await Workspace.create({
+        name: "Personal Workspace",
+        slug: `${req.user._id}-personal`,
+        ownerId: req.user._id,
+      });
+    }
+    workspaceId = workspace._id;
+  }
+
   const slug = slugify(name) + "-" + Math.random().toString(36).substring(2, 8);
 
   const project = await Project.create({

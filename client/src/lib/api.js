@@ -65,7 +65,13 @@ const request = async (method, path, body = null, isRetry = false) => {
     
     // For 204 No Content or empty responses
     const text = await response.text();
-    return text ? JSON.parse(text) : null;
+    if (!text) return null;
+    try {
+      const json = JSON.parse(text);
+      return json.success !== undefined && json.data !== undefined ? json.data : json;
+    } catch {
+      return text;
+    }
   } catch (error) {
     if (error.name === "AbortError") {
       throw new QueryError("Request timed out", 408);

@@ -36,5 +36,8 @@ router.post(
 );
 
 router.get("/me", requireAuth, authController.getMe);
+router.patch("/me", requireAuth, authController.updateMe);
+router.patch("/me/email", requireAuth, authController.updateEmail);
+router.post("/change-password", requireAuth, authController.changePassword);
 
 export default router;

@@ -7,6 +7,7 @@ import notificationRoutes from "./notification.routes.js";
 import sessionRoutes from "./session.routes.js";
 import userInvitationRoutes from "./user.invitation.routes.js";
 import activityRoutes from "./activity.routes.js";
+import templateRoutes from "./template.routes.js";
 
 const router = Router();
 
@@ -24,5 +25,6 @@ router.use("/notifications", notificationRoutes);
 router.use("/sessions", sessionRoutes);
 router.use("/invitations", userInvitationRoutes);
 router.use("/activities", activityRoutes);
+router.use("/templates", templateRoutes);
 
 export default router;
