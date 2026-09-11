@@ -12,7 +12,7 @@ const start = async () => {
 
   // 2. Create HTTP server and initialize sockets
   const server = http.createServer(app);
-  initSockets(server);
+  const io = initSockets(server);
 
   // 3. Start HTTP server
   server.listen(env.PORT, () => {
@@ -25,10 +25,18 @@ const start = async () => {
   });
 
   // 4. Graceful shutdown on SIGTERM / SIGINT
-  const shutdown = (signal) => {
+  const shutdown = async (signal) => {
     logger.info(`${signal} received. Shutting down gracefully...`);
-    server.close(() => {
+    if (io) {
+      io.close(() => {
+        logger.info("Socket.io closed.");
+      });
+    }
+    server.close(async () => {
       logger.info("HTTP server closed.");
+      const mongoose = (await import("mongoose")).default;
+      await mongoose.connection.close(false);
+      logger.info("MongoDB connection closed.");
       process.exit(0);
     });
   };

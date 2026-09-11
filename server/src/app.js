@@ -12,11 +12,15 @@ import { logger } from "./config/logger.js";
 import apiRouter from "./routes/index.js";
 import { notFound } from "./middleware/notFound.middleware.js";
 import { errorHandler } from "./middleware/error.middleware.js";
+import { requestId } from "./middleware/requestId.middleware.js";
 
 const app = express();
 
+// Attach request-id early
+app.use(requestId);
+
 // ─── Security ───────────────────────────────────────────────────────────────
-app.use(helmet());
+app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
 
 app.use(
   cors({
@@ -27,11 +31,11 @@ app.use(
   })
 );
 
-// Global rate limiter: 200 req per 15 min per IP
+// Global rate limiter: 300 req per 15 min per IP
 app.use(
   rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 200,
+    max: 300,
     standardHeaders: true,
     legacyHeaders: false,
     message: { success: false, message: "Too many requests, please try again later." },
@@ -57,8 +61,8 @@ const sanitizeObj = (obj) => {
   }
 };
 app.use((req, _res, next) => {
-  sanitizeObj(req.body);
-  sanitizeObj(req.params);
+  if (req.body) sanitizeObj(req.body);
+  if (req.params) sanitizeObj(req.params);
   next();
 });
 app.use(hpp()); // prevent HTTP parameter pollution
@@ -67,8 +71,9 @@ app.use(hpp()); // prevent HTTP parameter pollution
 app.use(compression());
 
 if (env.NODE_ENV !== "test") {
+  const morganFormat = env.NODE_ENV === "production" ? "combined" : "dev";
   app.use(
-    morgan("dev", {
+    morgan(morganFormat, {
       stream: { write: (msg) => logger.http(msg.trimEnd()) },
     })
   );

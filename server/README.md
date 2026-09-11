@@ -1,82 +1,55 @@
-# CollabIDE — Backend Server
+# CollabIDE Backend
 
-Express + MongoDB REST API powering CollabIDE.
+This is the backend server for CollabIDE, providing a robust, real-time collaboration environment with an API-first approach.
+
+## Overview
+CollabIDE backend handles authentication, project and file management, real-time presence and cursors (via Socket.IO), and a simplified Git-like version control system.
 
 ## Prerequisites
+- Node.js 20+
+- MongoDB 6+ (or MongoDB Atlas)
 
-- Node.js 18+
-- MongoDB running locally **or** a MongoDB Atlas URI
+## Setup
+1. Clone the repository and navigate to the `server/` directory.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Setup environment variables:
+   Copy `.env.example` to `.env` (or create a new `.env` file) and fill in your secrets:
+   ```
+   NODE_ENV=development
+   PORT=4000
+   MONGO_URI=mongodb://localhost:27017/collabide
+   JWT_SECRET=your_super_secret_key
+   CLIENT_URL=http://localhost:5173
+   ```
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-## Quick Start
+## Available Scripts
+- `npm run dev`: Starts the application in development mode with hot-reloading (nodemon).
+- `npm start`: Starts the application in production mode.
+- `npm run seed`: Seeds the database with default templates.
 
-```bash
-# 1. Install dependencies
-npm install
+## Folder Structure
+- `src/config`: Application-wide configuration and environment variables.
+- `src/controllers`: Request handlers that coordinate with services and models.
+- `src/middleware`: Express middlewares (auth, validation, error handling).
+- `src/models`: Mongoose database schemas.
+- `src/routes`: API endpoint definitions mapping to controllers.
+- `src/services`: Core business logic separated from the HTTP layer.
+- `src/sockets`: Socket.IO handlers for real-time collaboration.
+- `src/utils`: Helper functions and utilities.
+- `src/validators`: Request schema validation.
 
-# 2. Create .env from example
-cp .env.example .env
-# Edit .env and set MONGODB_URI if using Atlas
+## API Documentation
+Please refer to [API.md](./API.md) for a comprehensive list of endpoints, required authentication, request bodies, and expected responses.
 
-# 3. Start MongoDB locally (if not using Atlas)
-mongod
-
-# 4. Start dev server (hot-reload via nodemon)
-npm run dev
-```
-
-The API is now at: `http://localhost:4000/api/v1`  
-Health check: `http://localhost:4000/api/v1/health`
-
-## Environment Variables
-
-| Variable | Required | Default | Description |
-|---|---|---|---|
-| `NODE_ENV` | No | `development` | `development` / `production` / `test` |
-| `PORT` | No | `4000` | HTTP port to listen on |
-| `CLIENT_URL` | Yes | — | Frontend origin for CORS (`http://localhost:5173`) |
-| `MONGODB_URI` | Yes | — | MongoDB connection string |
-| `JWT_ACCESS_SECRET` | Yes | — | Secret for signing access tokens (min 16 chars) |
-| `JWT_REFRESH_SECRET` | Yes | — | Secret for signing refresh tokens (min 16 chars) |
-| `JWT_ACCESS_EXPIRES` | No | `15m` | Access token TTL |
-| `JWT_REFRESH_EXPIRES` | No | `7d` | Refresh token TTL |
-| `COOKIE_DOMAIN` | No | `localhost` | Domain for auth cookies |
-| `SMTP_HOST` | No | — | SMTP server host (for email) |
-| `SMTP_PORT` | No | — | SMTP server port |
-| `SMTP_USER` | No | — | SMTP username |
-| `SMTP_PASS` | No | — | SMTP password |
-| `SMTP_FROM` | No | `CollabIDE <noreply@collabide.dev>` | From address for transactional emails |
-
-## Scripts
-
-| Command | Description |
-|---|---|
-| `npm run dev` | Start with nodemon (hot-reload) |
-| `npm start` | Start in production |
-| `npm run lint` | ESLint all source files |
-| `npm run format` | Prettier format all source files |
-
-## Project Structure
-
-```
-server/src/
-├── config/
-│   ├── env.js          # Zod-validated env vars
-│   ├── logger.js       # Winston logger
-│   └── db.js           # MongoDB connection
-├── controllers/        # Route handler logic (coming in next prompts)
-├── middleware/
-│   ├── error.middleware.js    # Global error handler
-│   └── notFound.middleware.js # 404 catch-all
-├── models/             # Mongoose schemas (coming in next prompts)
-├── routes/
-│   └── index.js        # Root router; mounts sub-routers
-├── services/           # Business logic layer (coming in next prompts)
-├── sockets/            # Socket.IO event handlers (coming in next prompts)
-├── utils/
-│   ├── ApiError.js     # Operational error class
-│   ├── ApiResponse.js  # Standardized response shape
-│   └── asyncHandler.js # Async route wrapper
-├── validators/         # Zod request validators (coming in next prompts)
-├── app.js              # Express app setup
-└── index.js            # Server entry point
-```
+## Deployment Notes
+- This backend is built to run effortlessly on PAAS providers like Render, Railway, or Fly.io.
+- A MongoDB Atlas instance is recommended for production databases.
+- Ensure `NODE_ENV=production` is set so logging and error handling adapt securely.
+- Ensure `CLIENT_URL` correctly matches the deployed frontend to satisfy CORS policies.

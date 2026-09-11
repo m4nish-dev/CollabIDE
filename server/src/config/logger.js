@@ -7,8 +7,8 @@ const devFormat = combine(
   colorize({ all: true }),
   timestamp({ format: "HH:mm:ss" }),
   errors({ stack: true }),
-  printf(({ level, message, timestamp, stack }) => {
-    return `${timestamp} [${level}]: ${stack || message}`;
+  printf(({ level, message, timestamp, stack, reqId }) => {
+    return `${timestamp} [${level}]${reqId ? ` [reqId: ${reqId}]` : ""}: ${stack || message}`;
   })
 );
 

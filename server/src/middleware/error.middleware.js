@@ -46,18 +46,20 @@ export const errorHandler = (err, req, res, _next) => {
   // Log 5xx errors
   if (statusCode >= 500) {
     logger.error(`[${req.method}] ${req.originalUrl} — ${message}`, {
+      reqId: req.id,
       stack: err.stack,
       body: req.body,
     });
   } else {
-    logger.warn(`[${req.method}] ${req.originalUrl} — ${statusCode} ${message}`);
+    logger.warn(`[${req.method}] ${req.originalUrl} — ${statusCode} ${message}`, { reqId: req.id });
   }
 
   const response = {
     success: false,
     message,
     errors,
-    ...(env.NODE_ENV === "development" && { stack: err.stack }),
+    reqId: req.id,
+    ...(env.NODE_ENV !== "production" && { stack: err.stack }),
   };
 
   res.status(statusCode).json(response);
