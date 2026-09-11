@@ -54,12 +54,15 @@ const Login = () => {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      const { user, token } = await api.auth.login({
+      const res = await api.auth.login({
         email: data.email,
         password: data.password,
       });
       
-      login(user, token);
+      const user = res.data?.user || res.user;
+      const accessToken = res.data?.accessToken || res.token || res.accessToken;
+      
+      login(user, accessToken);
       
       const from = location.state?.from || "/dashboard";
       navigate(from, { replace: true });

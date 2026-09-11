@@ -7,6 +7,8 @@ import { Eye, EyeOff } from "lucide-react";
 import { motion } from "framer-motion";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useEffect } from "react";
+import { api } from "@/lib/api";
+import { toast } from "sonner";
 
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import {
@@ -53,19 +55,25 @@ const Signup = () => {
 
   const onSubmit = async (data) => {
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 800));
-    
-    const mockUser = {
-      id: "user-" + Date.now(),
-      name: data.fullName || data.email.split("@")[0],
-      email: data.email,
-      avatar: `https://i.pravatar.cc/150?u=${data.email}`
-    };
-    const mockToken = "mock-jwt-" + Date.now();
-    login(mockUser, mockToken);
-    
-    setLoading(false);
-    navigate("/onboarding");
+    try {
+      const res = await api.auth.signup({
+        name: data.fullName,
+        email: data.email,
+        password: data.password,
+      });
+
+      const user = res.data?.user || res.user;
+      const accessToken = res.data?.accessToken || res.token || res.accessToken;
+
+      login(user, accessToken);
+      navigate("/onboarding", { replace: true });
+    } catch (error) {
+      toast.error(error.message || "Failed to create account");
+      setError("root", { message: error.message });
+      onError();
+    } finally {
+      setLoading(false);
+    }
   };
 
   const onError = () => setShakeKey((k) => k + 1);
@@ -179,6 +187,12 @@ const Signup = () => {
             </p>
           )}
         </div>
+
+        {errors.root && (
+          <div className="p-3 bg-danger/10 text-danger border border-danger/20 rounded-md text-sm">
+            {errors.root.message}
+          </div>
+        )}
 
         <Button
           type="submit"

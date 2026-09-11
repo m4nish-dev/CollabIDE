@@ -292,7 +292,13 @@ const Sidebar = ({ collapsed, onToggle }) => {
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="gap-2 cursor-pointer text-danger focus:text-danger focus:bg-danger/10"
-              onClick={() => {
+              onClick={async () => {
+                try {
+                  const { api } = await import("@/lib/api");
+                  await api.auth.logout();
+                } catch (e) {
+                  // ignore
+                }
                 logout();
                 navigate("/login");
               }}
@@ -477,7 +483,18 @@ const Topbar = ({ onMenuClick }) => {
             <Button variant="outline" onClick={() => setIsLogoutDialogOpen(false)}>
               Cancel
             </Button>
-            <Button variant="destructive" onClick={() => navigate("/login")}>
+            <Button variant="destructive" onClick={async () => {
+              try {
+                const { api } = await import("@/lib/api");
+                await api.auth.logout();
+              } catch (e) {
+                // ignore
+              }
+              const { useAuthStore } = await import("@/store/useAuthStore");
+              useAuthStore.getState().logout();
+              navigate("/login");
+              setIsLogoutDialogOpen(false);
+            }}>
               Sign out
             </Button>
           </DialogFooter>

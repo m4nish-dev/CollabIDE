@@ -15,19 +15,45 @@ const BASE_URL = import.meta.env.VITE_API_URL || "";
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const request = async (method, path, body = null) => {
+const request = async (method, path, body = null, isRetry = false) => {
   const token = useAuthStore.getState().token;
   const headers = {
     "Content-Type": "application/json",
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
   
-  const options = { method, headers };
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 30000);
+
+  const options = { 
+    method, 
+    headers,
+    credentials: "include",
+    signal: controller.signal
+  };
   if (body) options.body = JSON.stringify(body);
 
   try {
     const response = await fetch(`${BASE_URL}${path}`, options);
+    clearTimeout(timeoutId);
+
     if (!response.ok) {
+      if (response.status === 401 && !isRetry && path !== "/auth/refresh" && path !== "/auth/login") {
+        try {
+          // Attempt token refresh
+          const refreshRes = await request("POST", "/auth/refresh", null, true);
+          if (refreshRes && refreshRes.data && refreshRes.data.accessToken) {
+            useAuthStore.getState().login(useAuthStore.getState().user, refreshRes.data.accessToken);
+            // Retry original request
+            return await request(method, path, body, true);
+          }
+        } catch (refreshErr) {
+          useAuthStore.getState().logout();
+          window.location.href = "/login";
+          throw normalizeError(refreshErr);
+        }
+      }
+
       let errorData;
       try {
         errorData = await response.json();
@@ -41,7 +67,12 @@ const request = async (method, path, body = null) => {
     const text = await response.text();
     return text ? JSON.parse(text) : null;
   } catch (error) {
+    if (error.name === "AbortError") {
+      throw new QueryError("Request timed out", 408);
+    }
     throw normalizeError(error);
+  } finally {
+    clearTimeout(timeoutId);
   }
 };
 
@@ -49,6 +80,12 @@ const generateId = () => Math.random().toString(36).substr(2, 9);
 
 export const api = {
   auth: {
+    logout: async () => {
+      if (BASE_URL) return request("POST", "/auth/logout");
+      console.warn("Using mock data for POST /auth/logout");
+      await delay(400);
+      return { success: true };
+    },
     login: async ({ email, password }) => {
       if (BASE_URL) return request("POST", "/auth/login", { email, password });
       await delay(800);

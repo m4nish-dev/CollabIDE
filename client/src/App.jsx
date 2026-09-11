@@ -56,8 +56,11 @@ import { TopProgressBar } from "@/components/shared/TopProgressBar";
 import { ErrorBoundary } from "@/components/shared/ErrorBoundary";
 import { useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSettingsStore } from "@/store/useSettingsStore";
+import { useAuthStore } from "@/store/useAuthStore";
+import { api } from "@/lib/api";
+import { LoadingSpinner } from "@/components/shared/LoadingSpinner";
 
 const PageTransition = ({ children }) => (
   <motion.div
@@ -164,13 +167,52 @@ const AppRoutes = () => {
 
 import { SkipToContent } from "@/components/shared/SkipToContent";
 
+const SessionProvider = ({ children }) => {
+  const { token, user, updateUser, logout } = useAuthStore();
+  const [isInitializing, setIsInitializing] = useState(true);
+
+  useEffect(() => {
+    const initSession = async () => {
+      if (!token) {
+        setIsInitializing(false);
+        return;
+      }
+      try {
+        const currentUser = await api.auth.me();
+        if (currentUser) {
+          updateUser(currentUser);
+        }
+      } catch (error) {
+        console.warn("Session invalid, logging out:", error);
+        logout();
+      } finally {
+        setIsInitializing(false);
+      }
+    };
+
+    initSession();
+  }, []); // Only run once on boot
+
+  if (isInitializing) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-background">
+        <LoadingSpinner size="lg" />
+      </div>
+    );
+  }
+
+  return children;
+};
+
 function App() {
   return (
     <ErrorBoundary>
       <SkipToContent />
       <ThemeProvider>
         <BrowserRouter>
-          <AppRoutes />
+          <SessionProvider>
+            <AppRoutes />
+          </SessionProvider>
         </BrowserRouter>
         <Toaster position="bottom-right" />
       </ThemeProvider>
